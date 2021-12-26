@@ -55,7 +55,7 @@ namespace XIVComboExpandedestPlugin
         }
 
         /// <inheritdoc/>
-        public string Name => "XIV Combo Expandedest";
+        public string Name => "XIV Combo blackbunny";
 
         /// <inheritdoc/>
         public void Dispose()

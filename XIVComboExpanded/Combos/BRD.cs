@@ -14,6 +14,9 @@ namespace XIVComboExpandedestPlugin.Combos
             VenomousBite = 100,
             QuickNock = 106,
             Windbite = 113,
+            Peloton = 7557,
+            MagesBallad = 114,
+            ArmysPaeon = 116,
             WanderersMinuet = 3559,
             IronJaws = 3560,
             PitchPerfect = 7404,
@@ -23,7 +26,11 @@ namespace XIVComboExpandedestPlugin.Combos
             Shadowbite = 16494,
             BurstShot = 16495,
             ApexArrow = 16496,
-            Ladonsbite = 25783;
+            Ladonsbite = 25783,
+            Bloodletter = 110,
+            RainOfDeath = 117,
+            EmpyrealArrow = 3558,
+            Sidewinder = 3562;
 
         public static class Buffs
         {
@@ -46,10 +53,15 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             public const byte
                 Windbite = 30,
+                EmpyrealArrow = 54,
                 IronJaws = 56,
+                Sidewinder = 60,
                 BiteUpgrade = 64,
                 RefulgentArrow = 70,
-                BurstShot = 76;
+                BurstShot = 76,
+                WanderersMinuet = 52,
+                MagesBallad = 30,
+                ArmysPaeon = 40;
         }
     }
 
@@ -78,8 +90,32 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == BRD.HeavyShot || actionID == BRD.BurstShot)
             {
+                var globalCD = GetCooldown(BRD.HeavyShot);
                 var gauge = GetJobGauge<BRDGauge>();
-                if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 100 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
+
+                if (globalCD.CooldownRemaining > 0.7 && IsEnabled(CustomComboPreset.BardOGCDFeature))
+                {
+                    var pitchCD = GetCooldown(BRD.PitchPerfect);
+                    var bloodCD = GetCooldown(BRD.Bloodletter);
+                    var empCD = GetCooldown(BRD.EmpyrealArrow);
+                    var swCD = GetCooldown(BRD.Sidewinder);
+
+                    if (!pitchCD.IsCooldown && gauge.Repertoire == 3 && gauge.Song == Song.WANDERER)
+                        return BRD.PitchPerfect;
+
+                    if (!bloodCD.IsCooldown)
+                        return BRD.Bloodletter;
+
+                    if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
+                        return BRD.EmpyrealArrow;
+
+                    if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
+                        return BRD.Sidewinder;
+
+                    return BRD.Bloodletter;
+                }
+
+                if ((gauge.SoulVoice == 100 && IsEnabled(CustomComboPreset.BardApexFeature)) || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
                     return OriginalHook(BRD.ApexArrow);
 
                 if (HasEffect(BRD.Buffs.StraightShotReady))
@@ -146,6 +182,7 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    /*
     internal class BardApexFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.BardApexFeature;
@@ -162,6 +199,7 @@ namespace XIVComboExpandedestPlugin.Combos
             return actionID;
         }
     }
+    */
 
     internal class BardShadowbiteFeature : CustomCombo
     {
@@ -171,8 +209,72 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
             {
+                var globalCD = GetCooldown(BRD.QuickNock);
+                var gauge = GetJobGauge<BRDGauge>();
+
+                if (globalCD.CooldownRemaining > 0.7 && IsEnabled(CustomComboPreset.BardOGCDFeature))
+                {
+                    var pitchCD = GetCooldown(BRD.PitchPerfect);
+                    var rainCD = GetCooldown(BRD.RainOfDeath);
+                    var empCD = GetCooldown(BRD.EmpyrealArrow);
+                    var swCD = GetCooldown(BRD.Sidewinder);
+
+                    if (!pitchCD.IsCooldown && gauge.Repertoire == 3 && gauge.Song == Song.WANDERER)
+                        return BRD.PitchPerfect;
+
+                    if (!rainCD.IsCooldown)
+                        return BRD.RainOfDeath;
+
+                    if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
+                        return BRD.EmpyrealArrow;
+
+                    if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
+                        return BRD.Sidewinder;
+
+                    return BRD.RainOfDeath;
+                }
+
+                if ((gauge.SoulVoice == 100 && IsEnabled(CustomComboPreset.BardApexFeature)) || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
+                    return OriginalHook(BRD.ApexArrow);
+
                 if (HasEffect(BRD.Buffs.ShadowbiteReady))
                     return OriginalHook(BRD.Shadowbite);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class BardSongFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardSongFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == BRD.MagesBallad)
+            {
+                var wmCD = GetCooldown(BRD.WanderersMinuet);
+                var mbCD = GetCooldown(BRD.MagesBallad);
+                var apCD = GetCooldown(BRD.ArmysPaeon);
+
+                // return sprint if they don't have any songs unlocked.
+                if (level < BRD.Levels.MagesBallad)
+                    return BRD.Peloton;
+
+                // return whichever is highest priority and off CD
+                if (!wmCD.IsCooldown && level >= BRD.Levels.WanderersMinuet)
+                    return BRD.WanderersMinuet;
+                if (!mbCD.IsCooldown && level >= BRD.Levels.MagesBallad)
+                    return BRD.MagesBallad;
+                if (!apCD.IsCooldown && level >= BRD.Levels.ArmysPaeon)
+                    return BRD.ArmysPaeon;
+
+                // if all three are on CD, return whichever is shortest CD for visibility
+                if (wmCD.CooldownRemaining <= mbCD.CooldownRemaining && wmCD.CooldownRemaining <= apCD.CooldownRemaining && level >= BRD.Levels.WanderersMinuet)
+                    return BRD.WanderersMinuet;
+                if (apCD.CooldownRemaining <= mbCD.CooldownRemaining && level >= BRD.Levels.ArmysPaeon)
+                    return BRD.ArmysPaeon;
+                return BRD.MagesBallad;
             }
 
             return actionID;
