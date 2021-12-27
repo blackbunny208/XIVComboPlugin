@@ -241,7 +241,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     return BRD.RainOfDeath;
                 }
 
-                if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 100 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
+                if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 80 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
                     return OriginalHook(BRD.ApexArrow);
 
                 if (HasEffect(BRD.Buffs.ShadowbiteReady))
