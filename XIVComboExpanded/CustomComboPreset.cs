@@ -120,11 +120,11 @@ namespace XIVComboExpandedestPlugin
         [SecretCustomCombo]
         [OrderedEnum]
         [CustomComboInfo("Add OGCDs to Heavy Shot and Quick Nock Replacers", "Replaces Heavy Shot and/or Quick Nock with OGCD moves when GCD is on cooldown. Does not cause clipping.", BRD.JobID, BRD.BurstShot)]
-        BardOGCDFeature = 2306,
+        BardOGCDFeature = 2398,
 
         [OrderedEnum]
         [CustomComboInfo("Replace Mages Ballad with Priority", "Replaces Mages Ballad single-target priority songs.", BRD.JobID, BRD.MagesBallad)]
-        BardSongFeature = 2307,
+        BardSongFeature = 2399,
 
         #endregion
         // ====================================================================================
