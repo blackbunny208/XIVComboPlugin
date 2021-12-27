@@ -24,8 +24,6 @@ namespace XIVComboExpandedestPlugin.Combos
             BattleVoice = 118,
             WanderersMinuet = 3559,
             IronJaws = 3560,
-            Sidewinder = 3562,
-            EmpyrealArrow = 3558,
             PitchPerfect = 7404,
             CausticBite = 7406,
             Stormbite = 7407,
@@ -243,7 +241,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     return BRD.RainOfDeath;
                 }
 
-                if ((gauge.SoulVoice == 100 && IsEnabled(CustomComboPreset.BardApexFeature)) || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
+                if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 100 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
                     return OriginalHook(BRD.ApexArrow);
 
                 if (HasEffect(BRD.Buffs.ShadowbiteReady))
@@ -289,7 +287,7 @@ namespace XIVComboExpandedestPlugin.Combos
             return actionID;
         }
     }
-    
+
     internal class BardSidewinderFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.BardSidewinderFeature;
