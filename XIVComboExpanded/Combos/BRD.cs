@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -13,12 +16,16 @@ namespace XIVComboExpandedestPlugin.Combos
             StraightShot = 98,
             VenomousBite = 100,
             QuickNock = 106,
+            Barrage = 107,
             Windbite = 113,
             Peloton = 7557,
             MagesBallad = 114,
             ArmysPaeon = 116,
+            BattleVoice = 118,
             WanderersMinuet = 3559,
             IronJaws = 3560,
+            Sidewinder = 3562,
+            EmpyrealArrow = 3558,
             PitchPerfect = 7404,
             CausticBite = 7406,
             Stormbite = 7407,
@@ -30,7 +37,8 @@ namespace XIVComboExpandedestPlugin.Combos
             Bloodletter = 110,
             RainOfDeath = 117,
             EmpyrealArrow = 3558,
-            Sidewinder = 3562;
+            Sidewinder = 3562,
+            RadiantFinale = 25785;
 
         public static class Buffs
         {
@@ -61,7 +69,8 @@ namespace XIVComboExpandedestPlugin.Combos
                 BurstShot = 76,
                 WanderersMinuet = 52,
                 MagesBallad = 30,
-                ArmysPaeon = 40;
+                ArmysPaeon = 40,
+                RadiantFinale = 90;
         }
     }
 
@@ -115,8 +124,8 @@ namespace XIVComboExpandedestPlugin.Combos
                     return BRD.Bloodletter;
                 }
 
-                if ((gauge.SoulVoice == 100 && IsEnabled(CustomComboPreset.BardApexFeature)) || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
-                    return OriginalHook(BRD.ApexArrow);
+                // if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 100 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
+                //    return OriginalHook(BRD.ApexArrow);
 
                 if (HasEffect(BRD.Buffs.StraightShotReady))
                     return OriginalHook(BRD.StraightShot);
@@ -192,7 +201,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
             {
                 var gauge = GetJobGauge<BRDGauge>();
-                if (gauge.SoulVoice == 100 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
+                if (gauge.SoulVoice >= 80 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
                     return OriginalHook(BRD.ApexArrow);
             }
 
@@ -278,6 +287,37 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+    
+    internal class BardSidewinderFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardSidewinderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return (IsActionOffCooldown(BRD.Sidewinder) && !IsActionOffCooldown(BRD.EmpyrealArrow) && level >= BRD.Levels.Sidewinder) ? BRD.Sidewinder : BRD.EmpyrealArrow;
+        }
+    }
+
+    internal class BardRadiantFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardRadiantFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var gauge = GetJobGauge<BRDGauge>();
+            return (!IsActionOffCooldown(BRD.BattleVoice) && level >= BRD.Levels.RadiantFinale) ? BRD.RadiantFinale : BRD.BattleVoice;
+        }
+    }
+
+    internal class BardBarrageFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardBarrageFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return HasEffect(BRD.Buffs.StraightShotReady) ? OriginalHook(BRD.StraightShot) : BRD.Barrage;
         }
     }
 }
