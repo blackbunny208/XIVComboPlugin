@@ -15,6 +15,7 @@ namespace XIVComboExpandedestPlugin.Combos
             HeavyShot = 97,
             StraightShot = 98,
             VenomousBite = 100,
+            RagingStrikes = 101,
             QuickNock = 106,
             Barrage = 107,
             Windbite = 113,
@@ -60,6 +61,7 @@ namespace XIVComboExpandedestPlugin.Combos
             public const byte
                 Windbite = 30,
                 EmpyrealArrow = 54,
+                BattleVoice = 50,
                 IronJaws = 56,
                 Sidewinder = 60,
                 BiteUpgrade = 64,
@@ -298,14 +300,23 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class BardRadiantStrikesFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardRadiantStrikesFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return IsActionOffCooldown(BRD.RagingStrikes) || level < BRD.Levels.BattleVoice || (IsEnabled(CustomComboPreset.BardRadiantFeature) && !IsActionOffCooldown(BRD.BattleVoice) && level < BRD.Levels.RadiantFinale) ? BRD.RagingStrikes : actionID;
+        }
+    }
+
     internal class BardRadiantFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.BardRadiantFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            var gauge = GetJobGauge<BRDGauge>();
-            return (!IsActionOffCooldown(BRD.BattleVoice) && level >= BRD.Levels.RadiantFinale) ? BRD.RadiantFinale : BRD.BattleVoice;
+            return (IsActionOffCooldown(BRD.BattleVoice) || level < BRD.Levels.RadiantFinale) ? BRD.BattleVoice : actionID;
         }
     }
 

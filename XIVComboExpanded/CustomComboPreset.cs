@@ -122,8 +122,12 @@ namespace XIVComboExpandedestPlugin
         BardSidewinderFeature = 2306,
 
         [OrderedEnum]
-        [CustomComboInfo("Radiant Feature", "Replaces Radiant Finale with Battle Voice if Battle Voice is off-cooldown.", BRD.JobID, BRD.RadiantFinale)]
+        [CustomComboInfo("Radiant Voice Feature", "Replaces Radiant Finale with Battle Voice if Battle Voice is off-cooldown.", BRD.JobID, BRD.RadiantFinale)]
         BardRadiantFeature = 2307,
+
+        [OrderedEnum]
+        [CustomComboInfo("Radiant Strikes Feature", "Replaces Radiant Finale with Raging Strikes if Raging Strikes is off-cooldown.\nThis takes priority over Battle Voice if Radiant Voice is enabled.", BRD.JobID, BRD.RadiantFinale)]
+        BardRadiantStrikesFeature = 2309,
 
         [OrderedEnum]
         [CustomComboInfo("Barrage Feature", "Replaces Barrage with Straight Shot (and its upgrades) if you have Straight Shot Ready.", BRD.JobID, BRD.Barrage)]
