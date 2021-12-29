@@ -35,8 +35,6 @@ namespace XIVComboExpandedestPlugin.Combos
             BurstShot = 16495,
             ApexArrow = 16496,
             Ladonsbite = 25783,
-            Bloodletter = 110,
-            RainOfDeath = 117,
             EmpyrealArrow = 3558,
             Sidewinder = 3562,
             RadiantFinale = 25785;
