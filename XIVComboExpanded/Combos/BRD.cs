@@ -18,6 +18,8 @@ namespace XIVComboExpandedestPlugin.Combos
             RagingStrikes = 101,
             QuickNock = 106,
             Barrage = 107,
+            RainOfDeath = 117,
+            Bloodletter = 110,
             Windbite = 113,
             Peloton = 7557,
             MagesBallad = 114,
@@ -61,6 +63,7 @@ namespace XIVComboExpandedestPlugin.Combos
             public const byte
                 Windbite = 30,
                 EmpyrealArrow = 54,
+                RainOfDeath = 45,
                 BattleVoice = 50,
                 IronJaws = 56,
                 Sidewinder = 60,
@@ -326,7 +329,17 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return HasEffect(BRD.Buffs.StraightShotReady) ? OriginalHook(BRD.StraightShot) : BRD.Barrage;
+            return HasEffect(BRD.Buffs.StraightShotReady) && !HasEffect(BRD.Buffs.ShadowbiteReady) ? OriginalHook(BRD.StraightShot) : BRD.Barrage;
+        }
+    }
+
+    internal class BardRainFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardRainFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return !TargetHasEffect(BRD.Debuffs.CausticBite) && !TargetHasEffect(BRD.Debuffs.Stormbite) && !TargetHasEffect(BRD.Debuffs.Windbite) && !TargetHasEffect(BRD.Debuffs.VenomousBite) && level >= BRD.Levels.RainOfDeath ? BRD.RainOfDeath : BRD.Bloodletter;
         }
     }
 }

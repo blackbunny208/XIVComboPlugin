@@ -15,7 +15,9 @@ namespace XIVComboExpandedestPlugin.Combos
             Fire2 = 147,
             Transpose = 149,
             Fire3 = 152,
+            Thunder2 = 7447,
             Thunder3 = 153,
+            Thunder4 = 7420,
             Blizzard3 = 154,
             Scathe = 156,
             Freeze = 159,
@@ -24,19 +26,23 @@ namespace XIVComboExpandedestPlugin.Combos
             Enochian = 3575,
             Blizzard4 = 3576,
             Fire4 = 3577,
+            Sharpcast = 3574,
             BetweenTheLines = 7419,
             Despair = 16505,
             UmbralSoul = 16506,
+            Foul = 7422,
             Xenoglossy = 16507,
             HighFire2 = 25794,
-            HighBlizzard2 = 25795;
+            HighBlizzard2 = 25795,
+            Amplifier = 25796;
 
         public static class Buffs
         {
             public const ushort
                 Thundercloud = 164,
                 LeyLines = 737,
-                Firestarter = 165;
+                Firestarter = 165,
+                Sharpcast = 867;
         }
 
         public static class Debuffs
@@ -54,13 +60,16 @@ namespace XIVComboExpandedestPlugin.Combos
                 Blizzard3 = 35,
                 Thunder3 = 45,
                 Flare = 50,
+                Sharpcast = 54,
                 Enochian = 60,
                 Blizzard4 = 58,
                 Fire4 = 60,
                 BetweenTheLines = 62,
                 Despair = 72,
                 UmbralSoul = 76,
-                Xenoglossy = 80;
+                Xenoglossy = 80,
+                Amplifier = 86,
+                EnhancedSharpcast = 88;
         }
     }
 
@@ -233,17 +242,39 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class BlackXenoAmpFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BlackXenoAmpFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var gauge = GetJobGauge<BLMGauge>();
+            return ((IsActionOffCooldown(BLM.Amplifier) && GetCooldown(BLM.Fire).CooldownRemaining > 0.5 && gauge.PolyglotStacks < 2) || LocalPlayer?.TargetObject is null) && level >= BLM.Levels.Amplifier ? BLM.Amplifier : actionID;
+        }
+    }
+
+    internal class BlackSharpThunderFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BlackSharpThunderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return ((GetCooldown(BLM.Sharpcast).CooldownRemaining <= 30 && GetCooldown(BLM.Fire).CooldownRemaining > 0.5 && !HasEffect(BLM.Buffs.Sharpcast)) || LocalPlayer?.TargetObject is null) && level >= BLM.Levels.Sharpcast ? BLM.Sharpcast : actionID;
+        }
+    }
+
     internal class BlackScatheFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.BlackScatheFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BLM.Scathe)
+            if (actionID == BLM.Scathe && level >= BLM.Levels.Xenoglossy)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (level >= BLM.Levels.Xenoglossy && gauge.PolyglotStacks > 0)
-                    return BLM.Xenoglossy;
+                if (((IsActionOffCooldown(BLM.Amplifier) && GetCooldown(BLM.Fire).CooldownRemaining > 0.5 && gauge.PolyglotStacks < 2) || LocalPlayer?.TargetObject is null) && level >= BLM.Levels.Amplifier && IsEnabled(CustomComboPreset.BlackXenoAmpFeature))
+                    return BLM.Amplifier;
+                return gauge.PolyglotStacks > 0 ? BLM.Xenoglossy : BLM.Scathe;
             }
 
             return actionID;

@@ -93,6 +93,14 @@ namespace XIVComboExpandedestPlugin
         [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID, BLM.Scathe)]
         BlackScatheFeature = 2507,
 
+        [OrderedEnum]
+        [CustomComboInfo("Xenoglossy/Foul to Amplifier", "Xenoglossy/Foul become Amplifier when it's available, the GCD has more than 0.5s remaining, and you have less than two Polyglot stacks, or if you have no target.", BLM.JobID, BLM.Xenoglossy, BLM.Foul)]
+        BlackXenoAmpFeature = 2512,
+
+        [OrderedEnum]
+        [CustomComboInfo("Thunder 3/4 to Sharpcast", "Thunder 3/4 become Sharpcast when it is available, the GCD has more than 0.5s remaining, and the effect is not currently up, or if you have no target.", BLM.JobID, BLM.Thunder, BLM.Thunder2, BLM.Thunder3, BLM.Thunder4)]
+        BlackSharpThunderFeature = 2513,
+
         #endregion
         // ====================================================================================
         #region BARD
@@ -126,12 +134,16 @@ namespace XIVComboExpandedestPlugin
         BardRadiantFeature = 2307,
 
         [OrderedEnum]
+        [CustomComboInfo("Barrage Feature", "Replaces Barrage with Straight Shot (and its upgrades) if you have Straight Shot Ready (unless Shadowbite is ready).", BRD.JobID, BRD.Barrage)]
+        BardBarrageFeature = 2308,
+
+        [OrderedEnum]
         [CustomComboInfo("Radiant Strikes Feature", "Replaces Radiant Finale with Raging Strikes if Raging Strikes is off-cooldown.\nThis takes priority over Battle Voice if Radiant Voice is enabled.", BRD.JobID, BRD.RadiantFinale)]
         BardRadiantStrikesFeature = 2309,
 
         [OrderedEnum]
-        [CustomComboInfo("Barrage Feature", "Replaces Barrage with Straight Shot (and its upgrades) if you have Straight Shot Ready.", BRD.JobID, BRD.Barrage)]
-        BardBarrageFeature = 2308,
+        [CustomComboInfo("Bloodletter to Rain of Death", "Replaces Bloodletter with Rain of Death if there are no self-applied DoTs on your target.", BRD.JobID, BRD.Bloodletter)]
+        BardRainFeature = 2310,
 
         [SecretCustomCombo]
         [OrderedEnum]
@@ -209,7 +221,7 @@ namespace XIVComboExpandedestPlugin
         DragoonFangThrustFeature = 2205,
 
         [OrderedEnum]
-        [CustomComboInfo("Stardiver to Nastrond", "Stardiver becomes Nastrond when Nastrond is off-cooldown and the GCD has more than 0.5s left, and becomes Geirskogul outside of Life of the Dragon.", DRG.JobID, DRG.Stardiver)]
+        [CustomComboInfo("Stardiver to Nastrond", "Stardiver becomes Nastrond when Nastrond is off-cooldown, and becomes Geirskogul outside of Life of the Dragon.", DRG.JobID, DRG.Stardiver)]
         DragoonNastrondFeature = 2206,
 
         [OrderedEnum]
