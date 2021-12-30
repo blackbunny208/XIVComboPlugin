@@ -94,7 +94,7 @@ namespace XIVComboExpandedestPlugin
         BlackScatheFeature = 2507,
 
         [OrderedEnum]
-        [CustomComboInfo("Xenoglossy/Foul to Amplifier", "Xenoglossy/Foul become Amplifier when it's available, the GCD has more than 0.5s remaining, and you have less than two Polyglot stacks, or if you have no target.", BLM.JobID, BLM.Xenoglossy, BLM.Foul)]
+        [CustomComboInfo("Xenoglossy/Foul to Amplifier", "Xenoglossy/Foul become Amplifier when it's available, the GCD has more than 0.5s remaining, and you have less than two Polyglot stacks, or if you have no target or have no Polyglot.", BLM.JobID, BLM.Xenoglossy, BLM.Foul)]
         BlackXenoAmpFeature = 2512,
 
         [OrderedEnum]
@@ -586,6 +586,11 @@ namespace XIVComboExpandedestPlugin
 
         [OrderedEnum]
         [ParentCombo(RedMageMeleeCombo)]
+        [CustomComboInfo("Redoublement Combo Lockout Feature", "Prevents you from using Redoublement combo if you have less than 50/50 gauge and have Verflare unlocked by replacing it with Verflare (which is unusable).", RDM.JobID, RDM.Redoublement)]
+        RedMageComboReminderFeature = 3515,
+
+        [OrderedEnum]
+        [ParentCombo(RedMageMeleeCombo)]
         [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement/Moulinet with the combo spells after you have gained 3 mana stacks.\nVerflare will always be picked, meaning you must still manually press Verholy if appropriate.", RDM.JobID, RDM.Redoublement, RDM.Moulinet)]
         RedMageMeleeComboPlus = 3508,
 
@@ -635,6 +640,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Fleche to Contre-Sixte", "Replaces Fleche with Contre-Sixte if the former is on cooldown and the latter is not.", RDM.JobID, RDM.Fleche)]
         RedMageContreSixteFeature = 3513,
+
+        [OrderedEnum]
+        [CustomComboInfo("Moulinet Lockout Feature", "Prevents you from using Moulinet below 60/60 gauge by replacing it with Physick if you have Verflare unlocked.", RDM.JobID, RDM.Moulinet)]
+        RedMageMoulinetReminderFeature = 3514,
 
         #endregion
         // ====================================================================================
