@@ -321,8 +321,17 @@ namespace XIVComboExpandedestPlugin
         MachinistOverheatFeature = 3103,
 
         [OrderedEnum]
+        [ParentCombo(MachinistMainCombo)]
+        [CustomComboInfo("Hypercharge Combo Feature", "Replace Clean Shot combo with Heat Blast while overheated.", MCH.JobID, MCH.CleanShot, MCH.HeatedCleanShot)]
+        MachinistHypercomboFeature = 3108,
+
+        [OrderedEnum]
         [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active.", MCH.JobID, MCH.RookAutoturret, MCH.AutomatonQueen)]
         MachinistOverdriveFeature = 3104,
+
+        [OrderedEnum]
+        [CustomComboInfo("Hypercharge to Wildfire", "Hypercharge becomes Wildfire if Wildfire is off-cooldown.", MCH.JobID, MCH.Hypercharge)]
+        MachinistHyperfireFeature = 3107,
 
         [OrderedEnum]
         [SecretCustomCombo]
