@@ -367,6 +367,11 @@ namespace XIVComboExpandedestPlugin
         MonkSTComboFormOption = 2008,
 
         [OrderedEnum]
+        [ParentCombo(MonkSTCombo)]
+        [CustomComboInfo("Monk Meditation Reminder", "Your single-target combo buttons become Meditate out of combat if you don't have the Fifth Chakra open.", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.FormShift)]
+        MonkMeditationReminder = 2013,
+
+        [OrderedEnum]
         [CustomComboInfo("Monk AoE Combo", "Replaces Masterful Blitz (for bug reasons) with the AoE combo chain, or whatever your most damaging move is when Perfect Balance is active.\nFour-Point Fury becomes AoE combo chain in order of forms during Perfect Balance.\nMasterful Blitz replaces the AoE combo when you have 3 Beast Chakra.", MNK.JobID, MNK.MasterfulBlitz, MNK.FourPointFury, MNK.FormShift)]
         MonkAoECombo = 2001,
 
@@ -394,8 +399,21 @@ namespace XIVComboExpandedestPlugin
         MonkHowlingFistMeditationFeature = 2003,
 
         [OrderedEnum]
+        [ParentCombo(MonkAoECombo)]
+        [CustomComboInfo("AoE Meditation Feature", "Replaces AoE combo with Howling Fist/Enlightment if you have the Fifth Chakra open and have a target.", MNK.JobID, MNK.MasterfulBlitz)]
+        MonkAoEMeditationFeature = 2014,
+
+        [OrderedEnum]
         [CustomComboInfo("Perfect Balance Feature", "Perfect Balance becomes Masterful Blitz while you have 3 Beast Chakra.", MNK.JobID, MNK.PerfectBalance)]
         MonkPerfectBalanceFeature = 2004,
+
+        [OrderedEnum]
+        [CustomComboInfo("Riddle of Fire to Brotherhood", "Riddle of Fire becomes Brotherhood if the former is on cooldown and the latter is not.", MNK.JobID, MNK.RiddleOfFire)]
+        MonkRiddleToBrotherFeature = 2011,
+
+        [OrderedEnum]
+        [CustomComboInfo("Riddle of Fire to Riddle of Wind", "Riddle of Fire becomes Riddle of Wind if the former is on cooldown and the latter is not.\nIf Riddle of Fire to Brotherhood is enabled, Brotherhood takes priority.", MNK.JobID, MNK.RiddleOfFire)]
+        MonkRiddleToRiddleFeature = 2012,
 
         #endregion
         // ====================================================================================
