@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedestPlugin.Combos
 {
@@ -19,7 +20,17 @@ namespace XIVComboExpandedestPlugin.Combos
             Phlegma = 24289,
             Phlegmara = 24307,
             Phlegmaga = 24313,
-            Dyskrasia = 24297;
+            Dyskrasia = 24297,
+            Zoe = 24300,
+            Pepsis = 24301,
+            Physis = 24288,
+            Physis2 = 24302,
+            Rhizomata = 24309,
+            Krasis = 24317,
+            Kerachole = 24298,
+            Haima = 24305,
+            Panhaima = 24311,
+            Pneuma = 24318;
 
         public static class Buffs
         {
@@ -41,6 +52,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 Soteria = 35,
                 Druochole = 45,
                 Kerachole = 50,
+                Physis2 = 60,
                 Taurochole = 62,
                 Ixochole = 52,
                 Dosis2 = 72,
@@ -127,6 +139,20 @@ namespace XIVComboExpandedestPlugin.Combos
                 return SGE.Druochole;
 
             return actionID;
+        }
+    }
+
+    internal class SageLucidReminderFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SageLucidReminderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if ((actionID == SGE.Physis || actionID == SGE.Physis2) &&
+                IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(level >= SGE.Levels.Physis2 ? SGE.Physis2 : SGE.Physis) && LocalPlayer?.CurrentMp <= 9000)
+                return All.LucidDreaming;
+
+            return IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 ? All.LucidDreaming : actionID;
         }
     }
 }

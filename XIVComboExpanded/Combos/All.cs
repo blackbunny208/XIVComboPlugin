@@ -19,7 +19,8 @@ namespace XIVComboExpandedestPlugin.Combos
             WiseToTheWorldMIN = 26521,
             WiseToTheWorldBTN = 26522,
             LowBlow = 7540,
-            Interject = 7538;
+            Interject = 7538,
+            LucidDreaming = 7562;
 
         public static class Buffs
         {

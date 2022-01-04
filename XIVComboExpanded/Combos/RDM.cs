@@ -249,7 +249,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                return (IsActionOffCooldown(RDM.Manafication) && !IsActionOffCooldown(RDM.Embolden) && level >= RDM.Levels.Manafication) ? RDM.Manafication : RDM.Embolden;
+                return (IsActionOffCooldown(RDM.Manafication) && !IsActionOffCooldown(RDM.Embolden) && level >= RDM.Levels.Manafication) ? RDM.Manafication : actionID;
             }
         }
 
@@ -269,7 +269,17 @@ namespace XIVComboExpandedestPlugin.Combos
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                return (IsActionOffCooldown(RDM.ContreSixte) && !IsActionOffCooldown(RDM.Fleche) && level >= RDM.Levels.ContreSixte) ? RDM.ContreSixte : RDM.Fleche;
+                return (IsActionOffCooldown(RDM.ContreSixte) && !IsActionOffCooldown(RDM.Fleche) && level >= RDM.Levels.ContreSixte) ? RDM.ContreSixte : actionID;
+            }
+        }
+
+        internal class RedMageLucidReminderFeature : CustomCombo
+        {
+            protected override CustomComboPreset Preset => CustomComboPreset.RedMageLucidReminderFeature;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                return IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 ? All.LucidDreaming : actionID;
             }
         }
     }

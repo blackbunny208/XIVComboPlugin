@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedestPlugin.Combos
@@ -15,7 +16,16 @@ namespace XIVComboExpandedestPlugin.Combos
             Holyga = 25860,
             AfflatusSolace = 16531,
             AfflatusRapture = 16534,
-            AfflatusMisery = 16535;
+            AfflatusMisery = 16535,
+            PresenceOfMind = 136,
+            Assize = 3571,
+            Temperance = 16536,
+            PlenaryIndulgence = 7433,
+            Asylum = 3569,
+            Tetragrammaton = 3570,
+            Benediction = 140,
+            Aquaveil = 25861,
+            LiturgyOfTheBell = 25862;
 
         public static class Buffs
         {
@@ -100,6 +110,16 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+
+    internal class WhiteMageLucidReminderFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.WhiteMageLucidReminderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 ? All.LucidDreaming : actionID;
         }
     }
 

@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedestPlugin.Combos
@@ -22,11 +23,17 @@ namespace XIVComboExpandedestPlugin.Combos
             FeyIllumination = 16538,
             Dissipation = 3587,
             Aetherpact = 7437,
-            SummonSeraph = 16545;
+            SummonSeraph = 16545,
+            ChainStratagem = 7436,
+            Recitation = 16542,
+            EmergencyTactics = 3586,
+            DeploymentTactics = 3585,
+            Ruin2 = 17870;
 
         public static class Buffs
         {
             public const ushort
+                Dissipation = 791,
                 Recitation = 1896;
         }
 
@@ -48,10 +55,20 @@ namespace XIVComboExpandedestPlugin.Combos
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             var gauge = GetJobGauge<SCHGauge>();
-            if (!Service.BuddyList.PetBuddyPresent && gauge.SeraphTimer == 0)
+            if (!Service.BuddyList.PetBuddyPresent && gauge.SeraphTimer == 0 && !HasEffect(SCH.Buffs.Dissipation))
                 return IsEnabled(CustomComboPreset.ScholarSeleneOption) ? SCH.SummonSelene : SCH.SummonEos;
 
             return actionID;
+        }
+    }
+
+    internal class ScholarRuinChainFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ScholarRuinChainFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return IsActionOffCooldown(SCH.ChainStratagem) && GetCooldown(SCH.Ruin2).CooldownRemaining >= 0.5 ? SCH.ChainStratagem : actionID;
         }
     }
 
@@ -95,6 +112,16 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+
+    internal class ScholarLucidReminderFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ScholarLucidReminderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 ? All.LucidDreaming : actionID;
         }
     }
 }

@@ -300,9 +300,21 @@ namespace XIVComboExpandedestPlugin.Combos
             {
                 if (IsActionOffCooldown(SAM.Senei) && level >= SAM.Levels.Senei)
                     return SAM.Senei;
+                if (level < SAM.Levels.Senei && IsActionOffCooldown(SAM.Guren))
+                    return SAM.Guren;
             }
 
             return actionID;
+        }
+    }
+
+    internal class SamuraiSeneiGurenFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SamuraiSeneiGurenFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == SAM.Senei && level < SAM.Levels.Senei ? SAM.Guren : actionID;
         }
     }
 

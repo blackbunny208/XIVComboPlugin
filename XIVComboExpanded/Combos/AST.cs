@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
@@ -9,6 +10,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         public const uint
             Benefic = 3594,
+            Malefic = 3596,
             Benefic2 = 3610,
             Draw = 3590,
             Balance = 4401,
@@ -21,7 +23,17 @@ namespace XIVComboExpandedestPlugin.Combos
             SleeveDraw = 7448,
             Play = 17055,
             CrownPlay = 25869,
-            Astrodyne = 25870;
+            Astrodyne = 25870,
+            Lightspeed = 3606,
+            CelestialOpposition = 16553,
+            CollectiveUnconscious = 3613,
+            Divination = 16552,
+            EarthlyStar = 7439,
+            Exaltation = 25873,
+            Macrocosmos = 25874,
+            NeutralSect = 16559,
+            Synastry = 3612,
+            Horoscope = 16557;
 
         public static class Buffs
         {
@@ -88,6 +100,18 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class AstrologianDrawLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianDrawLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var gauge = GetJobGauge<ASTGauge>();
+
+            return gauge.DrawnCard != CardType.NONE ? OriginalHook(AST.Malefic) : actionID;
+        }
+    }
+
     internal class AstrologianMinorArcanaPlayFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.AstrologianMinorArcanaPlayFeature;
@@ -117,6 +141,16 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+
+    internal class AstrologianLucidReminderFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianLucidReminderFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return OriginalHook(actionID) == actionID && HasCondition(ConditionFlag.InCombat) && IsActionOffCooldown(All.LucidDreaming) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 ? All.LucidDreaming : actionID;
         }
     }
 }
