@@ -32,6 +32,7 @@ namespace XIVComboExpandedestPlugin.Combos
             Jump = 92,
             HighJump = 16478,
             MirageDive = 7399,
+            DragonfireDive = 96,
             // Dragon
             Stardiver = 16480,
             WyrmwindThrust = 25773;
@@ -189,6 +190,17 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             var gauge = GetJobGauge<DRGGauge>();
             return IsActionOffCooldown(DRG.Nastrond) || !gauge.IsLOTDActive || !IsActionOffCooldown(DRG.Stardiver) ? OriginalHook(DRG.Geirskogul) : DRG.Stardiver;
+        }
+    }
+
+    internal class DragoonStarfireDiveFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DragoonStarfireDiveFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var gauge = GetJobGauge<DRGGauge>();
+            return (IsActionOffCooldown(DRG.DragonfireDive) && gauge.LOTDTimer > 7.5) || !gauge.IsLOTDActive || !IsActionOffCooldown(DRG.Stardiver) ? DRG.DragonfireDive : DRG.Stardiver;
         }
     }
 }

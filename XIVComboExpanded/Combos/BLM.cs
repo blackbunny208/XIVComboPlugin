@@ -42,7 +42,8 @@ namespace XIVComboExpandedestPlugin.Combos
                 Thundercloud = 164,
                 LeyLines = 737,
                 Firestarter = 165,
-                Sharpcast = 867;
+                Sharpcast = 867,
+                EnhancedFlare = 2960;
         }
 
         public static class Debuffs
@@ -147,7 +148,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 if (TargetHasEffect(BLM.Debuffs.Thunder3) && IsEnabled(CustomComboPreset.BlackFlareDespairFeature) && level >= BLM.Levels.Despair)
                     return BLM.Despair;
 
-                if (level >= BLM.Levels.Flare && ((gauge.UmbralHearts <= 1 && level >= BLM.Levels.Blizzard4) || LocalPlayer.CurrentMp < 3800) && gauge.InAstralFire)
+                if (level >= BLM.Levels.Flare && ((gauge.UmbralHearts <= 1 && level >= BLM.Levels.Blizzard4) || LocalPlayer.CurrentMp < 3800 || HasEffect(BLM.Buffs.EnhancedFlare)) && gauge.InAstralFire)
                     return BLM.Flare;
             }
 

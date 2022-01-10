@@ -287,6 +287,41 @@ namespace XIVComboExpandedestPlugin.Combos
         }
 
         /// <summary>
+        /// Gets the distance from the target.
+        /// </summary>
+        /// <returns>Double representing the distance from the target.</returns>
+        protected static double GetTargetDistance()
+        {
+            if (CurrentTarget is null)
+                return 0;
+
+            if (CurrentTarget is not BattleChara chara)
+                return 0;
+
+            double distanceX = chara.YalmDistanceX;
+            double distanceY = chara.YalmDistanceZ;
+
+            return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
+        }
+
+        /// <summary>
+        /// Determines if you are in melee range from the current target.
+        /// </summary>
+        /// <returns>Bool indicating whether you are in melee range.</returns>
+        protected static bool InMeleeRange()
+        {
+            var distance = GetTargetDistance();
+
+            if (distance == 0)
+                return true;
+
+            if (distance > 3)
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Gets the cooldown data for an action.
         /// </summary>
         /// <param name="actionID">Action ID to check.</param>
@@ -299,6 +334,12 @@ namespace XIVComboExpandedestPlugin.Combos
         /// <param name="actionID">Action ID to check.</param>
         /// <returns>A bool indicating if the action is off-cooldown or not.</returns>
         protected static bool IsActionOffCooldown(uint actionID) => GetCooldown(actionID).CooldownRemaining == 0;
+
+        /// <summary>
+        /// Checks to see if the GCD would not currently clip if you used a cooldown.
+        /// </summary>
+        /// <returns>A bool indicating if the GCD is greater-than-or-equal-to 0.5s or not.</returns>
+        protected static bool GCDClipCheck() => GetCooldown(PLD.RageOfHalone).CooldownRemaining >= 0.5;
 
         /// <summary>
         /// Gets the job gauge.

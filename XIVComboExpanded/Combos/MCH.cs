@@ -103,7 +103,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == MCH.GaussRound || actionID == MCH.Ricochet)
+            if ((actionID == MCH.GaussRound || actionID == MCH.Ricochet) && (!IsEnabled(CustomComboPreset.MachinistGaussRoundRicochetFeatureOption) || GetJobGauge<MCHGauge>().IsOverheated))
             {
                 if (level >= MCH.Levels.Ricochet)
                     return CalcBestAction(actionID, MCH.GaussRound, MCH.Ricochet);
@@ -121,7 +121,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return IsActionOffCooldown(MCH.Wildfire) && level >= MCH.Levels.Wildfire ? MCH.Wildfire : actionID;
+            return ((IsActionOffCooldown(MCH.Wildfire) && LocalPlayer?.TargetObject is not null) || (OriginalHook(MCH.Wildfire) != MCH.Wildfire && !IsActionOffCooldown(MCH.Hypercharge))) && level >= MCH.Levels.Wildfire ? OriginalHook(MCH.Wildfire) : actionID;
         }
     }
 

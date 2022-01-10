@@ -44,7 +44,9 @@ namespace XIVComboExpandedestPlugin.Combos
 
         public static class Levels
         {
-            public const byte Placeholder = 0;
+            public const byte
+                ChainStratagem = 66,
+                Recitation = 74;
         }
     }
 
@@ -68,7 +70,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return IsActionOffCooldown(SCH.ChainStratagem) && GetCooldown(SCH.Ruin2).CooldownRemaining >= 0.5 ? SCH.ChainStratagem : actionID;
+            return IsActionOffCooldown(SCH.ChainStratagem) && GetCooldown(SCH.Ruin2).CooldownRemaining >= 0.5 && level >= SCH.Levels.ChainStratagem ? SCH.ChainStratagem : actionID;
         }
     }
 
@@ -86,6 +88,16 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+
+    internal class ScholarExcogRecitationFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ScholarExcogRecitationFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return IsActionOffCooldown(SCH.Recitation) && level >= SCH.Levels.Recitation ? SCH.Recitation : actionID;
         }
     }
 

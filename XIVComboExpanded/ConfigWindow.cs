@@ -51,7 +51,7 @@ namespace XIVComboExpandedestPlugin
             ImGui.Text("This window allows you to enable and disable custom combos to your liking.");
 
             var showSecrets = Service.Configuration.EnableSecretCombos;
-            if (ImGui.Checkbox("Enable secret forbidden knowledge", ref showSecrets))
+            if (ImGui.Checkbox("Daemitus's Secrets", ref showSecrets))
             {
                 Service.Configuration.EnableSecretCombos = showSecrets;
                 Service.Configuration.Save();
@@ -60,7 +60,7 @@ namespace XIVComboExpandedestPlugin
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.TextUnformatted("Combos too dangerous for the common folk");
+                ImGui.TextUnformatted("The secrets of the creator (as well as some silly stuff I don't want to clog the list).");
                 ImGui.EndTooltip();
             }
 

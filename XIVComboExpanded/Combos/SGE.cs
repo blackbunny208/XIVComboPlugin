@@ -8,6 +8,7 @@ namespace XIVComboExpandedestPlugin.Combos
         public const byte JobID = 40;
 
         public const uint
+            Dosis = 24283,
             Diagnosis = 24284,
             Holos = 24310,
             Ixochole = 24299,
@@ -30,7 +31,8 @@ namespace XIVComboExpandedestPlugin.Combos
             Kerachole = 24298,
             Haima = 24305,
             Panhaima = 24311,
-            Pneuma = 24318;
+            Pneuma = 24318,
+            Eukrasia = 24290;
 
         public static class Buffs
         {
@@ -139,6 +141,16 @@ namespace XIVComboExpandedestPlugin.Combos
                 return SGE.Druochole;
 
             return actionID;
+        }
+    }
+
+    internal class SageEukrasiaDosisFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SageEukrasiaDosisFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return GetJobGauge<SGEGauge>().Eukrasia ? OriginalHook(SGE.Dosis) : actionID;
         }
     }
 

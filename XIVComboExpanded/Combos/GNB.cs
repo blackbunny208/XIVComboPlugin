@@ -239,7 +239,7 @@ namespace XIVComboExpandedestPlugin.Combos
             {
                 if (GetCooldown(GNB.SolidBarrel).CooldownRemaining >= 0.5 && IsActionOffCooldown(GNB.BowShock) && IsEnabled(CustomComboPreset.GunbreakerNoMercyFeature))
                     return GNB.BowShock;
-                if (IsActionOffCooldown(GNB.DoubleDown))
+                if (IsActionOffCooldown(GNB.DoubleDown) && level >= GNB.Levels.DoubleDown)
                     return GNB.DoubleDown;
             }
 

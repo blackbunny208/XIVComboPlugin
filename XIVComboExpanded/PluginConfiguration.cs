@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Dalamud.Configuration;
 using Dalamud.Utility;
@@ -64,12 +65,20 @@ namespace XIVComboExpandedestPlugin
             => this.EnabledActions.Contains(preset) && (this.EnableSecretCombos || !this.IsSecret(preset));
 
         /// <summary>
+        /// Gets a cached list of secret combos.
+        /// </summary>
+        [JsonIgnore]
+        public HashSet<CustomComboPreset> SecretCombos { get; } = Enum.GetValues<CustomComboPreset>()
+            .Where(preset => preset.GetAttribute<SecretCustomComboAttribute>() != default)
+            .ToHashSet();
+
+        /// <summary>
         /// Gets a value indicating whether a preset is secret.
         /// </summary>
         /// <param name="preset">Preset to check.</param>
         /// <returns>The boolean representation.</returns>
         public bool IsSecret(CustomComboPreset preset)
-            => preset.GetAttribute<SecretCustomComboAttribute>() != default;
+            => this.SecretCombos.Contains(preset);
 
         /// <summary>
         /// Gets an array of conflicting combo presets.

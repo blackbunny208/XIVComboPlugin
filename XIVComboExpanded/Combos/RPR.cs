@@ -13,6 +13,7 @@ namespace XIVComboExpandedestPlugin.Combos
             Slice = 24373,
             WaxingSlice = 24374,
             InfernalSlice = 24375,
+            SoulSlice = 24380,
             Gibbet = 24382,
             Gallows = 24383,
             ShadowOfDeath = 24378,
@@ -204,10 +205,10 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 if (IsEnabled(CustomComboPreset.ReaperGibbetGallowsFeature) && (HasEffect(RPR.Buffs.SoulReaver) || HasEffect(RPR.Buffs.Enshrouded)))
                 {
-                    if ((HasEffect(RPR.Buffs.EnhancedGallows) && !HasEffect(RPR.Buffs.Enshrouded) && IsEnabled(CustomComboPreset.ReaperGibbetGallowsOption)) || (HasEffect(RPR.Buffs.EnhancedCrossReaping) && HasEffect(RPR.Buffs.Enshrouded)))
-                        return OriginalHook(RPR.Gallows);
+                    if (((HasEffect(RPR.Buffs.EnhancedGibbet) || HasEffect(RPR.Buffs.EnhancedGallows)) && IsEnabled(CustomComboPreset.ReaperGibbetGallowsOption)) || HasEffect(RPR.Buffs.Enshrouded))
+                        return (HasEffect(RPR.Buffs.EnhancedGallows) && !HasEffect(RPR.Buffs.Enshrouded)) || (HasEffect(RPR.Buffs.EnhancedCrossReaping) && HasEffect(RPR.Buffs.Enshrouded)) ? OriginalHook(RPR.Gallows) : OriginalHook(RPR.Gibbet);
 
-                    return OriginalHook(RPR.Gibbet);
+                    return IsEnabled(CustomComboPreset.ReaperGibbetGallowsSwap) ? RPR.Gallows : RPR.Gibbet;
                 }
 
                 if (comboTime > 0)
@@ -293,11 +294,11 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == RPR.ShadowOfDeath)
+            if (actionID == (IsEnabled(CustomComboPreset.ReaperGibbetGallowsSoulSliceOption) ? RPR.SoulSlice : RPR.ShadowOfDeath))
             {
                 if ((HasEffect(RPR.Buffs.SoulReaver) && !HasEffect(RPR.Buffs.Enshrouded)) && (!IsEnabled(CustomComboPreset.ReaperGibbetGallowsOption) || (!HasEffect(RPR.Buffs.EnhancedGallows) && !HasEffect(RPR.Buffs.EnhancedGibbet))))
                 {
-                    return OriginalHook(RPR.Gallows);
+                    return IsEnabled(CustomComboPreset.ReaperGibbetGallowsSwap) ? OriginalHook(RPR.Gibbet) : OriginalHook(RPR.Gallows);
                 }
             }
 

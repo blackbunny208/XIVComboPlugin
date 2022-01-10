@@ -161,7 +161,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     case MNK.TwinSnakes:
                         return MNK.TwinSnakes;
                     case MNK.PerfectBalance:
-                        return MNK.Demolish;
+                        return (LocalPlayer?.TargetObject is not null && !GCDClipCheck()) || !IsEnabled(CustomComboPreset.MonkSTComboDemolishOption) ? MNK.Demolish : actionID;
                     case MNK.FormShift:
                         if (!IsEnabled(CustomComboPreset.MonkAoEComboFormOption))
                         {
@@ -205,7 +205,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
             if (actionID == MNK.MasterfulBlitz)
             {
-                if (IsEnabled(CustomComboPreset.MonkAoEMeditationFeature) && OriginalHook(MNK.Meditation) != MNK.Meditation && level >= MNK.Levels.HowlingFist && LocalPlayer?.TargetObject is not null && HasCondition(ConditionFlag.InCombat))
+                if (IsEnabled(CustomComboPreset.MonkAoEMeditationFeature) && OriginalHook(MNK.Meditation) != MNK.Meditation && level >= MNK.Levels.HowlingFist && LocalPlayer?.TargetObject is not null && HasCondition(ConditionFlag.InCombat) && GetCooldown(MNK.Bootshine).CooldownRemaining >= 0.5)
                     return OriginalHook(MNK.HowlingFist);
 
                 if (OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz && level >= MNK.Levels.MasterfulBlitz)
