@@ -10,6 +10,7 @@ namespace XIVComboExpandedestPlugin.Combos
         public const uint
             Dosis = 24283,
             Diagnosis = 24284,
+            Prognosis = 24286,
             Holos = 24310,
             Ixochole = 24299,
             Taurochole = 24303,
@@ -54,13 +55,17 @@ namespace XIVComboExpandedestPlugin.Combos
                 Soteria = 35,
                 Druochole = 45,
                 Kerachole = 50,
+                Ixochole = 52,
                 Physis2 = 60,
                 Taurochole = 62,
-                Ixochole = 52,
+                Haima = 70,
                 Dosis2 = 72,
-                Holos = 76,
                 Rizomata = 74,
-                Dosis3 = 82;
+                Holos = 76,
+                Panhaima = 80,
+                Dosis3 = 82,
+                Krasis = 86,
+                Pneuma = 90;
         }
     }
 
@@ -81,13 +86,43 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class SageExtremeButtonSaverFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SageExtremeButtonSaverFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (CurrentTarget is null)
+            {
+                if (actionID == SGE.Haima && level >= SGE.Levels.Panhaima)
+                    return SGE.Panhaima;
+                if (actionID == SGE.Taurochole && level >= SGE.Levels.Kerachole)
+                    return SGE.Kerachole;
+                if (actionID == SGE.Krasis)
+                    return OriginalHook(SGE.Physis);
+                if (actionID == SGE.Druochole && level >= SGE.Levels.Ixochole)
+                    return SGE.Ixochole;
+                if (actionID == SGE.Diagnosis && level >= SGE.Levels.Prognosis)
+                    return OriginalHook(SGE.Prognosis);
+            }
+
+            if (actionID == SGE.Krasis && level < SGE.Levels.Krasis)
+                return OriginalHook(SGE.Physis);
+
+            if (actionID == SGE.Pneuma && level < SGE.Levels.Pneuma)
+                return SGE.Holos;
+
+            return actionID;
+        }
+    }
+
     internal class SagePhlegmaToxicBalls : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.SagePhlegmaToxicBalls;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (LocalPlayer?.TargetObject is null && IsEnabled(CustomComboPreset.SagePhlegmaBalls))
+            if (CurrentTarget is null && IsEnabled(CustomComboPreset.SagePhlegmaBalls))
                 return OriginalHook(SGE.Dyskrasia);
 
             var gauge = GetJobGauge<SGEGauge>();
@@ -113,7 +148,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (LocalPlayer?.TargetObject is null)
+            if (CurrentTarget is null)
                 return OriginalHook(SGE.Dyskrasia);
 
             if (level >= SGE.Levels.Dosis3)

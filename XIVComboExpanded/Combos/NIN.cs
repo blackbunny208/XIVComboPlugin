@@ -213,6 +213,16 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class NinjaDWaDTrickFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.NinjaDWaDTrickFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return HasEffect(NIN.Buffs.Suiton) || HasEffect(NIN.Buffs.Hidden) || level < NIN.Levels.DreamWithinADream ? NIN.TrickAttack : actionID;
+        }
+    }
+
     internal class NinjaHideMugFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.NinjaHideMugFeature;

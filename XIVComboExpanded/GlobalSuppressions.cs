@@ -22,3 +22,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1117:Parameters should be on same line or separate lines", Justification = "Fuck", Scope = "member", Target = "~F:XIVComboExpandedestPlugin.CustomComboPreset.SummonerCarbyFeature")]
 [assembly: SuppressMessage("StyleCop.CSharp.LayoutRules", "SA1519:Braces should not be omitted from multi-line child statement", Justification = "No", Scope = "namespaceanddescendants", Target = "~N:XIVComboExpandedestPlugin")]
 [assembly: SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1117:Parameters should be on same line or separate lines", Justification = "Stop", Scope = "namespaceanddescendants", Target = "~N:XIVComboExpandedestPlugin")]
+[assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Shush", Scope = "member", Target = "~P:XIVComboExpandedestPlugin.PluginConfiguration.SecretCombos")]

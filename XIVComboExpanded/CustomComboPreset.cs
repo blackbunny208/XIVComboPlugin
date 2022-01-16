@@ -74,7 +74,11 @@ namespace XIVComboExpandedestPlugin
         BlackFreezeFlareFeature = 2502,
 
         [OrderedEnum]
-        [CustomComboInfo("Fire 2 Feature", "(High) Fire 2 becomes Flare in Astral Fire with 1 or fewer Umbral Hearts, or low MP if you are below level 58, or if you have Enhanced Flare.", BLM.JobID, BLM.Fire2, BLM.HighFire2)]
+        [CustomComboInfo("Umbral Soul Feature", "When you have no target, your ice spells become Umbral Soul while in Umbral Ice.", BLM.JobID, BLM.Freeze, BLM.Blizzard4, BLM.Blizzard, BLM.Blizzard2, BLM.Blizzard3, BLM.HighBlizzard2)]
+        BlackUmbralSoulFeature = 2503,
+
+        [OrderedEnum]
+        [CustomComboInfo("Fire 2 Feature", "(High) Fire 2 becomes Flare in Astral Fire if you have one Umbral Heart, or low MP, or if you have Enhanced Flare.", BLM.JobID, BLM.Fire2, BLM.HighFire2)]
         BlackFire2Feature = 2508,
 
         [OrderedEnum]
@@ -82,20 +86,25 @@ namespace XIVComboExpandedestPlugin
         BlackBlizzard2Feature = 2509,
 
         [OrderedEnum]
-        [CustomComboInfo("Umbral Soul/Transpose Switcher", "Change Transpose into Umbral Soul when Umbral Soul is usable.", BLM.JobID, BLM.Transpose)]
-        BlackManaFeature = 2503,
+        [CustomComboInfo("Fire 2/Ice 2 Option", "Fire 2 and Blizzard 2 will not change unless you're at max AF/UI with this option.", BLM.JobID, BLM.Blizzard2)]
+        BlackFireBlizzard2Option = 2514,
 
         [OrderedEnum]
         [CustomComboInfo("(Between the) Ley Lines", "Change Ley Lines into BTL when Ley Lines is active.", BLM.JobID, BLM.LeyLines)]
         BlackLeyLinesFeature = 2504,
 
         [OrderedEnum]
-        [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter proc is up.", BLM.JobID, BLM.Fire)]
+        [CustomComboInfo("Fire 1/3 Feature", "Fire 1 becomes Fire 3 outside of Astral Fire, and when Firestarter proc is up, and also becomes Paradox when available.", BLM.JobID, BLM.Fire)]
         BlackFireFeature = 2505,
 
         [OrderedEnum]
-        [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 when out of Umbral Ice.", BLM.JobID, BLM.Blizzard)]
+        [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 after you have unlocked it, and also becomes Paradox when available.", BLM.JobID, BLM.Blizzard)]
         BlackBlizzardFeature = 2506,
+
+        [OrderedEnum]
+        [ParentCombo(BlackFireFeature)]
+        [CustomComboInfo("Fire 1/3 Option", "Fire will stay Fire 3 if you're not at max AF with this option.", BLM.JobID, BLM.Fire)]
+        BlackFireOption = 2515,
 
         [OrderedEnum]
         [CustomComboInfo("Scathe/Xenoglossy Feature", "Scathe becomes Xenoglossy when available.", BLM.JobID, BLM.Scathe)]
@@ -122,8 +131,13 @@ namespace XIVComboExpandedestPlugin
         BardStraightShotUpgradeFeature = 2302,
 
         [OrderedEnum]
-        [CustomComboInfo("Iron Jaws Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available.", BRD.JobID, BRD.IronJaws)]
-        BardIronJawsFeature = 2303,
+        [CustomComboInfo("Iron Jaws Feature", "Iron Jaws is replaced with Stormbite/Windbite if it is not up, or you do not have Iron Jaws yet.", BRD.JobID, BRD.IronJaws)]
+        BardIronJawsFeature = 2311,
+
+        [OrderedEnum]
+        [SecretCustomCombo]
+        [CustomComboInfo("Iron Jaws Feature Plus", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available.\nThis is a separate feature from Iron Jaws Feature, and will overwrite it if both are enabled.", BRD.JobID, BRD.IronJaws)]
+        BardIronJawsFeaturePlus = 2303,
 
         [OrderedEnum]
         [CustomComboInfo("Quick Nock/Ladonsbite into Apex Arrow", "Replaces Quick Nock/Ladonsbite with Apex Arrow when gauge is 80 or above.", BRD.JobID, BRD.QuickNock, BRD.Ladonsbite)]
@@ -222,8 +236,18 @@ namespace XIVComboExpandedestPlugin
         DragoonChaosThrustCombo = 2203,
 
         [OrderedEnum]
+        [ParentCombo(DragoonChaosThrustCombo)]
+        [CustomComboInfo("Chaos Thrust Combo Disembowel Option", "Chaos Thrust's combo chain is instead replaced by Disembowel, not True Thrust, while you have no combo ongoing.", DRG.JobID, DRG.ChaosThrust, DRG.ChaoticSpring)]
+        DragoonChaosThrustComboOption = 2209,
+
+        [OrderedEnum]
         [CustomComboInfo("Full Thrust Combo", "Replace Full Thrust with its combo chain.", DRG.JobID, DRG.FullThrust, DRG.HeavensThrust)]
         DragoonFullThrustCombo = 2204,
+
+        [OrderedEnum]
+        [ParentCombo(DragoonFullThrustCombo)]
+        [CustomComboInfo("Full Thrust Combo Vorpal Thrust Option", "Full Thrust's combo chain is instead replaced by Vorpal Thrust, not True Thrust, while you have no combo ongoing.", DRG.JobID, DRG.FullThrust, DRG.HeavensThrust)]
+        DragoonFullThrustComboOption = 2210,
 
         [OrderedEnum]
         [CustomComboInfo("Wheeling Thrust/Fang and Claw Option", "When you have either Enhanced Fang and Claw or Wheeling Thrust,\nChaos Thrust Combo becomes Wheeling Thrust and Full Thrust Combo becomes Fang and Claw.\nRequires Chaos Thrust Combo and Full Thrust Combo.", DRG.JobID, DRG.FullThrust, DRG.ChaosThrust)]
@@ -384,11 +408,10 @@ namespace XIVComboExpandedestPlugin
         #region MONK
 
         [OrderedEnum]
-        [ConflictingCombos(MonkPerfectBalanceFeature)]
         [CustomComboInfo("Monk Combos (Experimental)", "This is a very complex, experimental combo that intends to allow Monk single-target combos with minimal 'thinking' for you, keeping it as legit as possible.\n" +
             "Normal Behavior: True Strike and Twin Snakes become Bootshine and Dragon Kick in Opo-Opo/no form, True Strike and Twin Snakes in Raptor, and Snap Punch and Demolish in Coeurl.\n" +
-            "Perfect Balance Behavior: Perfect Balance alternates between Dragon Kick and Bootshine. The other combos become Demolish and Twin Snakes, and change between Raptor/Coeurl moves based on which you pick.\n" +
-            "Formless Fist Behavior: True Strike becomes Dragon Kick. Twin Snakes stays normal. Perfect Balance becomes Demolish (if you have a target). Form Shift becomes Bootshine (Snap Punch with Bootshine feature).", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.PerfectBalance, MNK.FormShift)]
+            "Perfect Balance Behavior: Perfect Balance becomes Dragon Kick. Form Shift becomes Bootshine (if Bootshine Feature is not enabled). The other combos become Demolish and Twin Snakes, and change to Raptor/Coeurl moves based on which you pick.\n" +
+            "Formless Fist Behavior: True Strike becomes Dragon Kick. Twin Snakes stays normal. Perfect Balance becomes Demolish. Form Shift becomes Bootshine (Snap Punch with Bootshine feature).", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.PerfectBalance, MNK.FormShift)]
         MonkSTCombo = 2007,
 
         [OrderedEnum]
@@ -398,7 +421,7 @@ namespace XIVComboExpandedestPlugin
 
         [OrderedEnum]
         [ParentCombo(MonkSTCombo)]
-        [CustomComboInfo("Monk Combos Demolish Option", "Enabling this option makes it so that Perfect Balance under Formless Fist stays Perfect Balance for a short while after you use an action or you have no target.", MNK.JobID, MNK.PerfectBalance)]
+        [CustomComboInfo("Monk Combos Perfect Balance Option", "Enabling this option makes it so that Perfect Balance under Formless Fist stays Perfect Balance for a short while after you use an action or if you have no target.", MNK.JobID, MNK.PerfectBalance)]
         MonkSTComboDemolishOption = 2015,
 
         [OrderedEnum]
@@ -408,8 +431,7 @@ namespace XIVComboExpandedestPlugin
         MonkSTComboFormOption = 2008,
 
         [OrderedEnum]
-        [ParentCombo(MonkSTCombo)]
-        [CustomComboInfo("Monk Meditation Reminder", "Your single-target combo buttons become Meditate out of combat if you don't have the Fifth Chakra open.", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.FormShift)]
+        [CustomComboInfo("Monk Meditation Reminder", "Your GCDs become Meditate out of combat if you don't have the Fifth Chakra open.", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.FormShift, MNK.SnapPunch, MNK.Demolish, MNK.Bootshine, MNK.DragonKick, MNK.MasterfulBlitz, MNK.Rockbreaker, MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer, MNK.FourPointFury, MNK.SixSidedStar)]
         MonkMeditationReminder = 2013,
 
         [OrderedEnum]
@@ -428,7 +450,7 @@ namespace XIVComboExpandedestPlugin
         // MonkAoEBalanceFeature = 2006,
 
         [OrderedEnum]
-        [CustomComboInfo("Monk Bootshine Feature", "Replaces Dragon Kick with Bootshine if both a form and Leaden Fist are up.", MNK.JobID, MNK.DragonKick)]
+        [CustomComboInfo("Monk Bootshine Feature", "Replaces Dragon Kick with Bootshine if Leaden Fist is up.", MNK.JobID, MNK.DragonKick)]
         MnkBootshineFeature = 2002,
 
         [OrderedEnum]
@@ -493,6 +515,10 @@ namespace XIVComboExpandedestPlugin
         NinjaKassatsuDWaDFeature = 3015,
 
         [OrderedEnum]
+        [CustomComboInfo("Dream Within a Dream to Trick", "Replaces Dream Within a Dream with Trick Attack while Suiton or Hidden is active.", NIN.JobID, NIN.DreamWithinADream)]
+        NinjaDWaDTrickFeature = 3019,
+
+        [OrderedEnum]
         [CustomComboInfo("Ten Chi Jin to Meisui", "Replaces Ten Chi Jin (the move) with Meisui while Suiton is up.", NIN.JobID, NIN.TenChiJin)]
         NinjaTCJMeisuiFeature = 3005,
 
@@ -546,10 +572,16 @@ namespace XIVComboExpandedestPlugin
         PaladinGoringBladeCombo = 1901,
 
         [OrderedEnum]
+        [ConflictingCombos(PaladinAtonementFeature)]
+        [CustomComboInfo("Goring Blade Atonement Feature", "Replace Goring Blade with Atonement when under the effect of Sword Oath.\nThis conflicts with Atonement Feature because you always want to start a way to start your combo (dropping Sword Oath is very commonly necessary).", PLD.JobID, PLD.GoringBlade)]
+        PaladinGoringBladeAtonementFeature = 1909,
+
+        [OrderedEnum]
         [CustomComboInfo("Royal Authority Combo", "Replace Royal Authority/Rage of Halone with its combo chain.", PLD.JobID, PLD.RoyalAuthority, PLD.RageOfHalone)]
         PaladinRoyalAuthorityCombo = 1902,
 
         [OrderedEnum]
+        [ConflictingCombos(PaladinGoringBladeAtonementFeature)]
         [CustomComboInfo("Atonement Feature", "Replace Royal Authority with Atonement when under the effect of Sword Oath.", PLD.JobID, PLD.RoyalAuthority)]
         PaladinAtonementFeature = 1903,
 
@@ -571,6 +603,11 @@ namespace XIVComboExpandedestPlugin
         [SecretCustomCombo]
         [CustomComboInfo("Confiteor Feature", "Replace Holy Spirit/Circle with Confiteor when Requiescat has one stack left. Includes Confiteor combo.", PLD.JobID, PLD.HolySpirit, PLD.HolyCircle)]
         PaladinConfiteorFeature = 1906,
+
+        [OrderedEnum]
+        [SecretCustomCombo]
+        [CustomComboInfo("Scornful Spirits Feature", "Replace Spirits Within and Circle of Scorn with whichever is available soonest.", PLD.JobID, PLD.SpiritsWithin, PLD.Expiacion, PLD.CircleOfScorn)]
+        PaladinScornfulSpiritsFeature = 1908,
 
         #endregion
         // ====================================================================================
@@ -621,6 +658,11 @@ namespace XIVComboExpandedestPlugin
         [ParentCombo(ReaperGibbetGallowsFeature)]
         [CustomComboInfo("Gibbet and Gallows Enhanced Option", "Slice now turns into Gallows when Gallows is Enhanced, and removes it from Shadow of Death/Soul Slice while you have Enhanced Gibbet/Gallows.", RPR.JobID, RPR.Slice)]
         ReaperGibbetGallowsOption = 3905,
+
+        [OrderedEnum]
+        [ParentCombo(ReaperGibbetGallowsSoulSliceOption)]
+        [CustomComboInfo("Gibbet and Gallows Shroud Decombo", "Uncombos Void/Cross Reaping and spreads them across Soul Slice/Slice Combo.", RPR.JobID, RPR.Slice)]
+        ReaperGibbetGallowsShroudOption = 3920,
 
         [OrderedEnum]
         [ParentCombo(ReaperScytheCombo)]
@@ -679,6 +721,15 @@ namespace XIVComboExpandedestPlugin
         RedMageComboReminderFeature = 3515,
 
         [OrderedEnum]
+        [ParentCombo(RedMageComboReminderFeature)]
+        [CustomComboInfo("Redoublement Combo Lockout Option", "Replaces Redoublement with Flare instead of Verflare, to prevent queueing issues.", RDM.JobID, RDM.Redoublement)]
+        RedMageComboReminderOption = 3517,
+
+        [OrderedEnum]
+        [CustomComboInfo("Moulinet Lockout Feature", "Prevents you from using Moulinet below 60/60 gauge by replacing it with Physick if you have Verflare unlocked.", RDM.JobID, RDM.Moulinet)]
+        RedMageMoulinetReminderFeature = 3514,
+
+        [OrderedEnum]
         [ParentCombo(RedMageMeleeCombo)]
         [CustomComboInfo("Redoublement Combo Plus", "Replaces Redoublement/Moulinet with the combo spells after you have gained 3 mana stacks.\nVerflare will always be picked, meaning you must still manually press Verholy if appropriate.", RDM.JobID, RDM.Redoublement, RDM.Moulinet)]
         RedMageMeleeComboPlus = 3508,
@@ -732,10 +783,6 @@ namespace XIVComboExpandedestPlugin
         RedMageContreSixteFeature = 3513,
 
         [OrderedEnum]
-        [CustomComboInfo("Moulinet Lockout Feature", "Prevents you from using Moulinet below 60/60 gauge by replacing it with Physick if you have Verflare unlocked.", RDM.JobID, RDM.Moulinet)]
-        RedMageMoulinetReminderFeature = 3514,
-
-        [OrderedEnum]
         [CustomComboInfo("Red Mage Lucid Dreaming Reminder", "All your non-role action cooldowns (that don't have charges) become Lucid Dreaming if they aren't up and Lucid Dreaming is, and you have less-than-or-equal-to 9000 MP.", RDM.JobID, RDM.Embolden, RDM.Manafication, RDM.Fleche, RDM.ContreSixte)]
         RedMageLucidReminderFeature = 3516,
 
@@ -762,6 +809,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Eukrasia into Eukrasian Dosis", "Eukrasia turns into Eukrasian Dosis while you have it active.\nThis doesn't save a button or really much else, I just like how it feels.", SGE.JobID, SGE.Eukrasia)]
         SageEukrasiaDosisFeature = 4006,
+
+        [OrderedEnum]
+        [CustomComboInfo("Extreme Button Saver", "This changes your targeted healing actions into AoE heals if you have no target.\nRecommended only if you have disabilities, or REALLY like having a smaller hotbar, at the expense of having to untarget a lot.", SGE.JobID, SGE.Haima, SGE.Druochole, SGE.Taurochole, SGE.Krasis, SGE.Diagnosis, SGE.Pneuma)]
+        SageExtremeButtonSaverFeature = 4007,
 
         [OrderedEnum]
         [CustomComboInfo("Sage Lucid Dreaming Reminder", "All your non-role action cooldowns (that don't have charges) become Lucid Dreaming if they aren't up and Lucid Dreaming is, and you have less-than-or-equal-to 9000 MP.", SGE.JobID, SGE.Kardia, SGE.Soteria, SGE.Zoe, SGE.Pepsis, SGE.Physis, SGE.Physis2, SGE.Ixochole, SGE.Holos, SGE.Rhizomata, SGE.Krasis, SGE.Kerachole, SGE.Taurochole, SGE.Haima, SGE.Panhaima, SGE.Pneuma)]
@@ -830,6 +881,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Iaijutsu/Tsubame to Shoha Persistence Option", "Makes it so Shoha doesn't disappear after a short amount of time after Iaijutsu.", SAM.JobID, SAM.Iaijutsu, SAM.TsubameGaeshi)]
         SamuraiShohaGCDOption = 3421,
+
+        [OrderedEnum]
+        [CustomComboInfo("Iaijutsu/Tsubame to Shoha Inbetween Option", "Makes it so Shoha doesn't appear inbetween Iaijutsu and Tsubame.", SAM.JobID, SAM.Iaijutsu, SAM.TsubameGaeshi)]
+        SamuraiShohaBetweenOption = 3422,
 
         [OrderedEnum]
         [CustomComboInfo("Iaijutsu to Kaiten", "Replace Iaijutsu/Ogi-Namikiri with Kaiten if Kaiten is not active, you have the gauge to use it, an Iaijutsu is ready, and you have just used an action.", SAM.JobID, SAM.Iaijutsu, SAM.OgiNamikiri)]
@@ -1004,15 +1059,15 @@ namespace XIVComboExpandedestPlugin
         #region WHITE MAGE
 
         [OrderedEnum]
-        [CustomComboInfo("Solace into Misery", "Replaces Afflatus Solace with Afflatus Misery when Misery is ready to be used", WHM.JobID, WHM.AfflatusSolace)]
+        [CustomComboInfo("Solace into Misery", "Replaces Afflatus Solace with Afflatus Misery when Misery is ready to be used.", WHM.JobID, WHM.AfflatusSolace)]
         WhiteMageSolaceMiseryFeature = 2401,
 
         [OrderedEnum]
-        [CustomComboInfo("Rapture into Misery", "Replaces Afflatus Rapture with Afflatus Misery when Misery is ready to be used", WHM.JobID, WHM.AfflatusRapture)]
+        [CustomComboInfo("Rapture into Misery", "Replaces Afflatus Rapture with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID, WHM.AfflatusRapture)]
         WhiteMageRaptureMiseryFeature = 2402,
 
         [OrderedEnum]
-        [CustomComboInfo("Holy into Misery", "Replaces Holy/Holy 3 with Afflatus Misery when Misery is ready to be used", WHM.JobID, WHM.Holy, WHM.Holyga)]
+        [CustomComboInfo("Holy into Misery", "Replaces Holy/Holy 3 with Afflatus Misery when Misery is ready to be used and you have a target.", WHM.JobID, WHM.Holy, WHM.Holyga)]
         WhiteMageHolyMiseryFeature = 2405,
 
         [OrderedEnum]

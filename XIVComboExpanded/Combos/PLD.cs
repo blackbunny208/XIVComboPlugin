@@ -24,7 +24,10 @@ namespace XIVComboExpandedestPlugin.Combos
             Atonement = 16460,
             BladeOfFaith = 25748,
             BladeOfTruth = 25749,
-            BladeOfValor = 25750;
+            BladeOfValor = 25750,
+            SpiritsWithin = 29,
+            Expiacion = 25747,
+            CircleOfScorn = 23;
 
         public static class Buffs
         {
@@ -44,11 +47,23 @@ namespace XIVComboExpandedestPlugin.Combos
                 RiotBlade = 4,
                 RageOfHalone = 26,
                 Prominence = 40,
+                CircleOfScorn = 50,
                 GoringBlade = 54,
                 RoyalAuthority = 60,
                 HolyCircle = 72,
                 Atonement = 76,
-                Confiteor = 80;
+                Confiteor = 80,
+                Expiacion = 86;
+        }
+    }
+
+    internal class PaladinGoringBladeAtonementFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinGoringBladeAtonementFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade ? PLD.Atonement : actionID;
         }
     }
 
@@ -168,6 +183,24 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 return PLD.Requiescat;
             }
+
+            return actionID;
+        }
+    }
+
+    internal class PaladinScornfulSpiritsFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinScornfulSpiritsFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (level < PLD.Levels.CircleOfScorn)
+                return PLD.SpiritsWithin;
+
+            var oppositeActionID = actionID == PLD.SpiritsWithin || actionID == PLD.Expiacion ? PLD.CircleOfScorn : PLD.SpiritsWithin;
+
+            if (!IsActionOffCooldown(actionID) && IsActionOffCooldown(oppositeActionID))
+                return OriginalHook(oppositeActionID);
 
             return actionID;
         }

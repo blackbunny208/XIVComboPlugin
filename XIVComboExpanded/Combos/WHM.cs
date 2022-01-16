@@ -90,7 +90,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             var gauge = GetJobGauge<WHMGauge>();
 
-            if (gauge.BloodLily == 3)
+            if (gauge.BloodLily == 3 && CurrentTarget is not null)
                 return WHM.AfflatusMisery;
 
             return actionID;
@@ -141,7 +141,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (actionID == WHM.Medica)
             {
                 var gauge = GetJobGauge<WHMGauge>();
-                if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature) && gauge.BloodLily == 3 && level >= WHM.Levels.AfflatusRapture)
+                if (IsEnabled(CustomComboPreset.WhiteMageRaptureMiseryFeature) && gauge.BloodLily == 3 && level >= WHM.Levels.AfflatusRapture && CurrentTarget is not null)
                     return WHM.AfflatusMisery;
                 if (level >= WHM.Levels.AfflatusRapture && gauge.Lily > 0)
                     return WHM.AfflatusRapture;

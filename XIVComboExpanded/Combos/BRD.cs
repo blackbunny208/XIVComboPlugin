@@ -136,9 +136,9 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
-    internal class BardIronJawsFeature : CustomCombo
+    internal class BardIronJawsFeaturePlus : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.BardIronJawsFeature;
+        protected override CustomComboPreset Preset => CustomComboPreset.BardIronJawsFeaturePlus;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
@@ -189,6 +189,16 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+
+    internal class BardIronJawsFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardIronJawsFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return level < BRD.Levels.IronJaws || (!TargetHasEffect(BRD.Debuffs.Stormbite) && !TargetHasEffect(BRD.Debuffs.Windbite)) ? (level < BRD.Levels.Windbite ? BRD.VenomousBite : OriginalHook(BRD.Stormbite)) : actionID;
         }
     }
 
