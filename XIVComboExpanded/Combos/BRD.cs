@@ -276,15 +276,27 @@ namespace XIVComboExpandedestPlugin.Combos
                 var wmCD = GetCooldown(BRD.WanderersMinuet);
                 var mbCD = GetCooldown(BRD.MagesBallad);
                 var apCD = GetCooldown(BRD.ArmysPaeon);
+                var gauge = GetJobGauge<BRDGauge>();
 
                 // return sprint if they don't have any songs unlocked.
                 if (level < BRD.Levels.MagesBallad)
                     return BRD.Peloton;
 
+                // return whichever is highest priority and off CD for lvl 90
+                if (level == 90)
+                {
+                    if (!wmCD.IsCooldown && gauge.Coda[2] == Song.NONE)
+                        return BRD.WanderersMinuet;
+                    if (!mbCD.IsCooldown && gauge.Coda[0] == Song.NONE)
+                        return BRD.MagesBallad;
+                    if (!apCD.IsCooldown && gauge.Coda[1] == Song.NONE)
+                        return BRD.ArmysPaeon;
+                }
+
                 // return whichever is highest priority and off CD
                 if (!wmCD.IsCooldown && level >= BRD.Levels.WanderersMinuet)
                     return BRD.WanderersMinuet;
-                if (!mbCD.IsCooldown && level >= BRD.Levels.MagesBallad)
+                if (!mbCD.IsCooldown)
                     return BRD.MagesBallad;
                 if (!apCD.IsCooldown && level >= BRD.Levels.ArmysPaeon)
                     return BRD.ArmysPaeon;
