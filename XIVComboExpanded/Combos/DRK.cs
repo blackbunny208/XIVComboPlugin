@@ -112,7 +112,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (IsActionOffCooldown(DRK.BloodWeapon) || level < DRK.Levels.CarveAndSpit)
+            if (IsActionOffCooldown(DRK.BloodWeapon) || !CanUseAction(DRK.CarveAndSpit))
                 return DRK.BloodWeapon;
 
             return actionID;

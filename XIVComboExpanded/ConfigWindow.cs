@@ -49,6 +49,7 @@ namespace XIVComboExpandedestPlugin
         public override void Draw()
         {
             ImGui.Text("This window allows you to enable and disable custom combos to your liking.");
+            ImGui.Text("For features that replace buttons with cooldowns, it is recommended you either make use of a cooldown bar, or a cooldown tracking plugin like Job Bars or XIVAuras.");
 
             var showSecrets = Service.Configuration.EnableSecretCombos;
             if (ImGui.Checkbox("Daemitus's Secrets", ref showSecrets))
@@ -62,6 +63,13 @@ namespace XIVComboExpandedestPlugin
                 ImGui.BeginTooltip();
                 ImGui.TextUnformatted("The secrets of the creator (as well as some silly stuff I don't want to clog the list).");
                 ImGui.EndTooltip();
+            }
+
+            var hideChildren = Service.Configuration.HideChildren;
+            if (ImGui.Checkbox("Hide children of disabled combos and features", ref hideChildren))
+            {
+                Service.Configuration.HideChildren = hideChildren;
+                Service.Configuration.Save();
             }
 
             ImGui.BeginChild("scrolling", new Vector2(0, -1), true);
@@ -83,6 +91,20 @@ namespace XIVComboExpandedestPlugin
 
                         if (secret && !showSecrets)
                             continue;
+
+                        if (parent != null)
+                        {
+                            if (!Service.Configuration.EnabledActions.Contains(parent.Value))
+                            {
+                                if (Service.Configuration.EnabledActions.Contains(preset)) Service.Configuration.EnabledActions.Remove(preset);
+                                if (hideChildren) continue;
+                            }
+
+                            ImGui.Indent();
+                        }
+
+                        if (parent?.GetAttribute<ParentComboAttribute>() != null)
+                            ImGui.Indent();
 
                         ImGui.PushItemWidth(200);
 
@@ -127,11 +149,6 @@ namespace XIVComboExpandedestPlugin
                         ImGui.PopItemWidth();
 
                         var description = $"#{i}: {info.Description}";
-                        if (parent != null)
-                        {
-                            var parentInfo = parent.GetAttribute<CustomComboInfoAttribute>();
-                            description += $"\nRequires {parentInfo.FancyName}.";
-                        }
 
                         ImGui.TextColored(this.shadedColor, description);
                         ImGui.Spacing();
@@ -152,11 +169,13 @@ namespace XIVComboExpandedestPlugin
                         {
                             var actions = Service.Configuration.DancerDanceCompatActionIDs.Cast<int>().ToArray();
 
+                            ImGui.Indent();
                             var inputChanged = false;
                             inputChanged |= ImGui.InputInt("Emboite (Red) ActionID", ref actions[0], 0);
                             inputChanged |= ImGui.InputInt("Entrechat (Blue) ActionID", ref actions[1], 0);
                             inputChanged |= ImGui.InputInt("Jete (Green) ActionID", ref actions[2], 0);
                             inputChanged |= ImGui.InputInt("Pirouette (Yellow) ActionID", ref actions[3], 0);
+                            ImGui.Unindent();
 
                             if (inputChanged)
                             {
@@ -167,6 +186,30 @@ namespace XIVComboExpandedestPlugin
 
                             ImGui.Spacing();
                         }
+
+                        if (preset == CustomComboPreset.ReaperRegressFeature && enabled)
+                        {
+                            var delay = Service.Configuration.RegressDelay;
+
+                            ImGui.Indent();
+                            var inputChanged = false;
+                            inputChanged |= ImGui.InputFloat("Regress Delay", ref delay);
+                            ImGui.Unindent();
+
+                            if (inputChanged)
+                            {
+                                Service.Configuration.RegressDelay = delay;
+                                Service.Configuration.Save();
+                            }
+
+                            ImGui.Spacing();
+                        }
+
+                        if (parent != null)
+                            ImGui.Unindent();
+
+                        if (parent?.GetAttribute<ParentComboAttribute>() != null)
+                            ImGui.Unindent();
 
                         i++;
                     }

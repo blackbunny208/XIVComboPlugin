@@ -72,10 +72,10 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
+                    if (lastComboMove == WAR.HeavySwing && CanUseAction(WAR.Maim))
                         return WAR.Maim;
 
-                    if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsPath)
+                    if (lastComboMove == WAR.Maim && CanUseAction(WAR.StormsPath))
                         return WAR.StormsPath;
                 }
 
@@ -101,10 +101,10 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == WAR.HeavySwing && level >= WAR.Levels.Maim)
+                    if (lastComboMove == WAR.HeavySwing && CanUseAction(WAR.Maim))
                         return WAR.Maim;
 
-                    if (lastComboMove == WAR.Maim && level >= WAR.Levels.StormsEye)
+                    if (lastComboMove == WAR.Maim && CanUseAction(WAR.StormsEye))
                         return WAR.StormsEye;
                 }
 
@@ -123,7 +123,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == WAR.MythrilTempest)
             {
-                if (HasEffect(WAR.Buffs.PrimalRendReady) && IsEnabled(CustomComboPreset.WarriorMythrilRendFeature))
+                if (CanUseAction(WAR.PrimalRend) && IsEnabled(CustomComboPreset.WarriorMythrilRendFeature))
                     return WAR.PrimalRend;
 
                 if (IsEnabled(CustomComboPreset.WarriorInnerReleaseFeature) && HasEffect(WAR.Buffs.InnerRelease))
@@ -133,7 +133,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
+                    if (lastComboMove == WAR.Overpower && CanUseAction(WAR.MythrilTempest))
                     {
                         var gauge = GetJobGauge<WARGauge>().BeastGauge;
                         if (IsEnabled(CustomComboPreset.WarriorGaugeOvercapFeature) && gauge >= 90 && level >= WAR.Levels.MythrilTempestTrait)
@@ -158,7 +158,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == WAR.Overpower)
             {
-                if (HasEffect(WAR.Buffs.PrimalRendReady) && IsEnabled(CustomComboPreset.WarriorMythrilRendFeature))
+                if (CanUseAction(WAR.PrimalRend) && IsEnabled(CustomComboPreset.WarriorMythrilRendFeature))
                     return WAR.PrimalRend;
 
                 if (IsEnabled(CustomComboPreset.WarriorInnerReleaseFeature) && HasEffect(WAR.Buffs.InnerRelease))
@@ -169,7 +169,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 var gauge = GetJobGauge<WARGauge>().BeastGauge;
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == WAR.Overpower && level >= WAR.Levels.MythrilTempest)
+                    if (lastComboMove == WAR.Overpower && CanUseAction(WAR.MythrilTempest))
                     {
                         if (gauge >= 90 && level >= WAR.Levels.MythrilTempestTrait && IsEnabled(CustomComboPreset.WarriorGaugeOvercapFeature))
                         {
@@ -208,7 +208,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (HasEffect(WAR.Buffs.PrimalRendReady))
+            if (CanUseAction(WAR.PrimalRend))
                 return WAR.PrimalRend;
 
             return actionID;

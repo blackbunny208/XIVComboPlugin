@@ -57,6 +57,19 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class PaladinLowBashFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinLowBashFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (IsEnabled(CustomComboPreset.AllTankInterruptFeature) && CanInterruptEnemy() && IsActionOffCooldown(All.Interject))
+                return All.Interject;
+
+            return IsActionOffCooldown(All.LowBlow) ? All.LowBlow : actionID;
+        }
+    }
+
     internal class PaladinGoringBladeAtonementFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.PaladinGoringBladeAtonementFeature;
@@ -64,6 +77,45 @@ namespace XIVComboExpandedestPlugin.Combos
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             return HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade ? PLD.Atonement : actionID;
+        }
+    }
+
+    internal class PaladinAtonementFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinAtonementFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade ? PLD.Atonement : actionID;
+        }
+    }
+
+    internal class PaladinHolyCircleFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinHolyCircleFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (IsEnabled(CustomComboPreset.PaladinConfiteorFeature))
+            {
+                if (OriginalHook(PLD.Confiteor) != PLD.Confiteor)
+                    return OriginalHook(PLD.Confiteor);
+            }
+
+            if (HasEffect(PLD.Buffs.Requiescat))
+            {
+                if (IsEnabled(CustomComboPreset.PaladinConfiteorFeature))
+                {
+                    if (FindEffect(PLD.Buffs.Requiescat)?.StackCount <= 1 && level >= PLD.Levels.Confiteor)
+                    {
+                        return OriginalHook(PLD.Confiteor);
+                    }
+                }
+
+                return level >= PLD.Levels.HolyCircle ? PLD.HolyCircle : actionID;
+            }
+
+            return actionID;
         }
     }
 
@@ -80,7 +132,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
                         return PLD.RiotBlade;
 
-                    if (lastComboMove == PLD.RiotBlade && level >= PLD.Levels.GoringBlade)
+                    if (lastComboMove == PLD.RiotBlade && CanUseAction(PLD.GoringBlade))
                         return PLD.GoringBlade;
                 }
 
@@ -108,12 +160,6 @@ namespace XIVComboExpandedestPlugin.Combos
                         return OriginalHook(PLD.RageOfHalone);
                 }
 
-                if (IsEnabled(CustomComboPreset.PaladinAtonementFeature))
-                {
-                    if (HasEffect(PLD.Buffs.SwordOath))
-                        return PLD.Atonement;
-                }
-
                 return PLD.FastBlade;
             }
 
@@ -131,7 +177,7 @@ namespace XIVComboExpandedestPlugin.Combos
             {
                 if (comboTime > 0)
                 {
-                    if (lastComboMove == PLD.TotalEclipse && level >= PLD.Levels.Prominence)
+                    if (lastComboMove == PLD.TotalEclipse && CanUseAction(PLD.Prominence))
                         return PLD.Prominence;
                 }
 

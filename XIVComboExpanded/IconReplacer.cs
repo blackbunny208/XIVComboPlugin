@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Utility;
+
+using FFXIVClientStructs.FFXIV.Client.Game;
+
 using XIVComboExpandedestPlugin.Attributes;
 using XIVComboExpandedestPlugin.Combos;
 
@@ -17,18 +20,22 @@ namespace XIVComboExpandedestPlugin
     /// </summary>
     internal sealed partial class IconReplacer : IDisposable
     {
+        private readonly unsafe ActionManager* clientStructActionManager;
         private readonly List<CustomCombo> customCombos;
         private readonly Hook<IsIconReplaceableDelegate> isIconReplaceableHook;
         private readonly Hook<GetIconDelegate> getIconHook;
 
         private IntPtr actionManager = IntPtr.Zero;
+
         private HashSet<uint> comboActionIDs = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IconReplacer"/> class.
         /// </summary>
-        public IconReplacer()
+        public unsafe IconReplacer()
         {
+            this.clientStructActionManager = ActionManager.Instance();
+
             this.customCombos = Assembly.GetAssembly(typeof(CustomCombo))!.GetTypes()
                 .Where(t => t.BaseType == typeof(CustomCombo))
                 .Select(t => Activator.CreateInstance(t))
@@ -55,6 +62,17 @@ namespace XIVComboExpandedestPlugin
         {
             this.getIconHook.Dispose();
             this.isIconReplaceableHook.Dispose();
+        }
+
+        /// <summary>
+        /// Gets bool determining if action is greyed out or not.
+        /// </summary>
+        /// <param name="actionID">Action ID.</param>
+        /// <param name="targetID">Target ID.</param>
+        /// <returns>A bool value of whether the action can be used or not.</returns>
+        internal unsafe bool CanUseAction(uint actionID, uint targetID = 0xE000_0000)
+        {
+            return clientStructActionManager->GetActionStatus(ActionType.Spell, actionID, targetID, 0, 1) == 0;
         }
 
         /// <summary>

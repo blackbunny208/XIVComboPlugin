@@ -125,7 +125,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 {
                     if (OriginalHook(RDM.Verthunder2) == RDM.Verflare)
                     {
-                        if (IsEnabled(CustomComboPreset.RedMageMeleeComboPlusVerholy) && level >= RDM.Levels.Verholy)
+                        if (IsEnabled(CustomComboPreset.RedMageMeleeComboPlusVerholy) && CanUseAction(RDM.Verholy))
                             return RDM.Verholy;
                         return RDM.Verflare;
                     }
@@ -135,7 +135,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 {
                     if (OriginalHook(RDM.Verthunder2) == RDM.Verflare)
                     {
-                        if (gauge.BlackMana >= gauge.WhiteMana && level >= RDM.Levels.Verholy)
+                        if (gauge.BlackMana >= gauge.WhiteMana && CanUseAction(RDM.Verholy))
                         {
                             if (HasEffect(RDM.Buffs.VerstoneReady) && !HasEffect(RDM.Buffs.VerfireReady) && (gauge.BlackMana - gauge.WhiteMana <= 9))
                                 return RDM.Verflare;
@@ -144,7 +144,7 @@ namespace XIVComboExpandedestPlugin.Combos
                         }
                         else if (level >= RDM.Levels.Verflare)
                         {
-                            if (!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady) && level >= RDM.Levels.Verholy && (gauge.WhiteMana - gauge.BlackMana <= 9))
+                            if (!HasEffect(RDM.Buffs.VerstoneReady) && HasEffect(RDM.Buffs.VerfireReady) && CanUseAction(RDM.Verholy) && (gauge.WhiteMana - gauge.BlackMana <= 9))
                                 return RDM.Verholy;
 
                             return RDM.Verflare;
@@ -192,7 +192,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 if (level >= RDM.Levels.Scorch && (lastComboMove == RDM.Verflare || lastComboMove == RDM.Verholy))
                     return RDM.Scorch;
 
-                if (actionID == RDM.Verstone && OriginalHook(RDM.Verthunder2) == RDM.Verflare && level >= RDM.Levels.Verholy)
+                if (actionID == RDM.Verstone && OriginalHook(RDM.Verthunder2) == RDM.Verflare && CanUseAction(RDM.Verholy))
                     return RDM.Verholy;
 
                 if (actionID == RDM.Verfire && OriginalHook(RDM.Verthunder2) == RDM.Verflare && level >= RDM.Levels.Verflare)
@@ -253,7 +253,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                return (IsActionOffCooldown(RDM.Manafication) && !IsActionOffCooldown(RDM.Embolden) && level >= RDM.Levels.Manafication) ? RDM.Manafication : actionID;
+                return (IsActionOffCooldown(RDM.Manafication) && !IsActionOffCooldown(RDM.Embolden) && CanUseAction(RDM.Manafication)) ? RDM.Manafication : actionID;
             }
         }
 
@@ -283,7 +283,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                return IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 ? All.LucidDreaming : actionID;
+                return IsActionOffCooldown(All.LucidDreaming) && HasCondition(ConditionFlag.InCombat) && !IsActionOffCooldown(actionID) && LocalPlayer?.CurrentMp <= 9000 && CanUseAction(All.LucidDreaming) ? All.LucidDreaming : actionID;
             }
         }
     }

@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedestPlugin.Combos
@@ -43,6 +47,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 LeyLines = 737,
                 Firestarter = 165,
                 Sharpcast = 867,
+                Triplecast = 1211,
                 EnhancedFlare = 2960;
         }
 
@@ -69,8 +74,41 @@ namespace XIVComboExpandedestPlugin.Combos
                 Despair = 72,
                 UmbralSoul = 76,
                 Xenoglossy = 80,
+                HighFire2 = 82,
                 Amplifier = 86,
                 EnhancedSharpcast = 88;
+        }
+    }
+
+    internal class BlackUmbralSoulTransposeFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BlackUmbralSoulTransposeFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == BLM.UmbralSoul)
+            {
+                if (!GetJobGauge<BLMGauge>().InUmbralIce || level < BLM.Levels.UmbralSoul)
+                    return BLM.Transpose;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class BlackDespairTransposeFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BlackDespairTransposeFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == BLM.Despair)
+            {
+                if (GetJobGauge<BLMGauge>().InUmbralIce || LocalPlayer?.CurrentMp == 0 || level < BLM.Levels.Despair)
+                    return BLM.Transpose;
+            }
+
+            return actionID;
         }
     }
 
@@ -80,7 +118,54 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return GetJobGauge<BLMGauge>().InUmbralIce && CurrentTarget is null && level >= BLM.Levels.UmbralSoul ? BLM.UmbralSoul : actionID;
+            var iceSpells = new List<uint>() { BLM.Blizzard, BLM.Blizzard2, BLM.Blizzard3, BLM.Blizzard4, BLM.HighBlizzard2, BLM.Freeze };
+
+            if (IsEnabled(CustomComboPreset.BlackEnochianFeature))
+                iceSpells.Add(BLM.Fire4);
+
+            if (IsEnabled(CustomComboPreset.BlackFreezeFlareFeature))
+                iceSpells.Add(BLM.Flare);
+
+            return GetJobGauge<BLMGauge>().InUmbralIce && CurrentTarget is null && level >= BLM.Levels.UmbralSoul && iceSpells.Contains(actionID) ? (level < BLM.Levels.UmbralSoul ? BLM.Transpose : BLM.UmbralSoul) : actionID;
+        }
+    }
+
+    internal class BlackTransposeFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BlackTransposeFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            var iceSpells = new List<uint>() { BLM.Blizzard, BLM.Blizzard2, BLM.Blizzard3, BLM.Blizzard4, BLM.HighBlizzard2, BLM.Freeze };
+            var fireSpells = new List<uint>() { BLM.Fire, BLM.Fire2, BLM.Fire3, BLM.Fire4, BLM.HighFire2, BLM.Flare, BLM.Despair };
+
+            var gauge = GetJobGauge<BLMGauge>();
+
+            if (IsEnabled(CustomComboPreset.BlackEnochianFeature))
+            {
+                iceSpells.Remove(BLM.Blizzard4);
+                fireSpells.Remove(BLM.Fire4);
+            }
+
+            if (IsEnabled(CustomComboPreset.BlackFreezeFlareFeature))
+            {
+                iceSpells.Remove(BLM.Freeze);
+                fireSpells.Remove(BLM.Flare);
+            }
+
+            if (gauge.InAstralFire && CurrentTarget is null)
+            {
+                if (iceSpells.Contains(actionID))
+                    return BLM.Transpose;
+            }
+
+            if (gauge.InUmbralIce && CurrentTarget is null)
+            {
+                if (fireSpells.Contains(actionID))
+                    return BLM.Transpose;
+            }
+
+            return actionID;
         }
     }
 
@@ -93,9 +178,6 @@ namespace XIVComboExpandedestPlugin.Combos
             if (actionID == BLM.Fire4 || actionID == BLM.Blizzard4)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-
-                if (gauge.InUmbralIce && CurrentTarget is null && level >= BLM.Levels.UmbralSoul && IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
-                    return BLM.UmbralSoul;
 
                 if (IsEnabled(CustomComboPreset.BlackEnochianDespairFeature) && gauge.InAstralFire)
                 {
@@ -136,9 +218,6 @@ namespace XIVComboExpandedestPlugin.Combos
             {
                 var gauge = GetJobGauge<BLMGauge>();
 
-                if (gauge.InUmbralIce && CurrentTarget is null && level >= BLM.Levels.UmbralSoul && IsEnabled(CustomComboPreset.BlackUmbralSoulFeature))
-                    return BLM.UmbralSoul;
-
                 if (TargetHasEffect(BLM.Debuffs.Thunder3) && IsEnabled(CustomComboPreset.BlackFlareDespairFeature) && level >= BLM.Levels.Despair && gauge.InAstralFire)
                     return BLM.Despair;
 
@@ -164,6 +243,12 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 if (TargetHasEffect(BLM.Debuffs.Thunder3) && IsEnabled(CustomComboPreset.BlackFlareDespairFeature) && level >= BLM.Levels.Despair)
                     return BLM.Despair;
+
+                if (IsEnabled(CustomComboPreset.BlackTripleHF2Option) && level >= BLM.Levels.HighFire2)
+                {
+                    if (gauge.UmbralHearts == 2 && LocalPlayer?.CurrentMp >= 3800 && !HasEffect(BLM.Buffs.Triplecast))
+                        return actionID;
+                }
 
                 if (level >= BLM.Levels.Flare && (gauge.UmbralHearts == 1 || LocalPlayer?.CurrentMp < 3800 || HasEffect(BLM.Buffs.EnhancedFlare)) && gauge.InAstralFire)
                     return BLM.Flare;
@@ -218,7 +303,8 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == BLM.Blizzard)
             {
-                if (OriginalHook(BLM.Blizzard) != BLM.Blizzard && (GetJobGauge<BLMGauge>().InUmbralIce || LocalPlayer?.CurrentMp >= 1600))
+                var gauge = GetJobGauge<BLMGauge>();
+                if (gauge.IsParadoxActive && (gauge.InUmbralIce || (LocalPlayer?.CurrentMp >= 1600 && gauge.InAstralFire)))
                     return OriginalHook(BLM.Blizzard);
                 if (level >= BLM.Levels.Blizzard3)
                     return BLM.Blizzard3;

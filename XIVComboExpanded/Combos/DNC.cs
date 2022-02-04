@@ -110,7 +110,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == DNC.FanDance1 || actionID == DNC.FanDance2)
             {
-                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance) && IsEnabled(CustomComboPreset.DancerFanDance4Combo))
                     return DNC.FanDance4;
 
                 if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
@@ -151,6 +151,38 @@ namespace XIVComboExpandedestPlugin.Combos
                 }
 
                 return OriginalHook(DNC.TechnicalStep);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DancerFlourishFanDance3Feature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DancerFlourishFanDance4Feature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DNC.Flourish)
+            {
+                if (level >= DNC.Levels.FanDance3 && HasEffect(DNC.Buffs.ThreefoldFanDance))
+                    return DNC.FanDance3;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DancerFlourishFanDance4Feature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DancerFlourishFanDance4Feature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DNC.Flourish)
+            {
+                if (level >= DNC.Levels.FanDance4 && HasEffect(DNC.Buffs.FourfoldFanDance))
+                    return DNC.FanDance4;
             }
 
             return actionID;
@@ -211,6 +243,24 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class DancerSingleTargetProcs : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DancerSingleTargetProcs;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DNC.Cascade)
+                if (level >= DNC.Levels.ReverseCascade && HasEffect(DNC.Buffs.FlourishingSymmetry))
+                    return DNC.ReverseCascade;
+
+            if (actionID == DNC.Fountain)
+                if (level >= DNC.Levels.Fountainfall && HasEffect(DNC.Buffs.FlourishingFlow))
+                    return DNC.Fountainfall;
+
+            return actionID;
+        }
+    }
+
     internal class DancerAoeMultibutton : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.DancerAoeMultibutton;
@@ -233,6 +283,24 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 return DNC.Windmill;
             }
+
+            return actionID;
+        }
+    }
+
+    internal class DancerAoEProcs : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DancerAoeProcs;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DNC.Windmill)
+                if (level >= DNC.Levels.RisingWindmill && HasEffect(DNC.Buffs.FlourishingSymmetry))
+                    return DNC.RisingWindmill;
+
+            if (actionID == DNC.Bladeshower)
+                if (level >= DNC.Levels.Bloodshower && HasEffect(DNC.Buffs.FlourishingFlow))
+                    return DNC.Bloodshower;
 
             return actionID;
         }

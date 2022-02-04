@@ -82,7 +82,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == All.LowBlow)
             {
-                if (CanInterruptEnemy() && IsActionOffCooldown(All.Interject))
+                if (CanInterruptEnemy() && IsActionOffCooldown(All.Interject) && CanUseAction(All.Interject))
                     return All.Interject;
             }
 

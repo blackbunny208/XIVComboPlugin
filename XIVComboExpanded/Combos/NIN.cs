@@ -124,7 +124,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (lastComboMove == NIN.SpinningEdge && level >= NIN.Levels.GustSlash)
                         return NIN.GustSlash;
 
-                    if (lastComboMove == NIN.GustSlash && level >= NIN.Levels.ArmorCrush)
+                    if (lastComboMove == NIN.GustSlash && CanUseAction(NIN.ArmorCrush))
                         return NIN.ArmorCrush;
                 }
 
@@ -177,7 +177,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == (IsEnabled(CustomComboPreset.NinjaEvilHakkeMujinsatsuCombo) ? NIN.DeathBlossom : NIN.HakkeMujinsatsu))
             {
-                if (comboTime > 0 && lastComboMove == NIN.DeathBlossom && level >= NIN.Levels.HakkeMujinsatsu)
+                if (comboTime > 0 && lastComboMove == NIN.DeathBlossom && CanUseAction(NIN.HakkeMujinsatsu))
                     return NIN.HakkeMujinsatsu;
 
                 return NIN.DeathBlossom;
@@ -219,7 +219,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return HasEffect(NIN.Buffs.Suiton) || HasEffect(NIN.Buffs.Hidden) || level < NIN.Levels.DreamWithinADream ? NIN.TrickAttack : actionID;
+            return HasEffect(NIN.Buffs.Suiton) || HasEffect(NIN.Buffs.Hidden) || !CanUseAction(OriginalHook(NIN.DreamWithinADream)) ? NIN.TrickAttack : actionID;
         }
     }
 

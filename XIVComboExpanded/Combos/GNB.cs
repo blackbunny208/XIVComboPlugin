@@ -148,7 +148,7 @@ namespace XIVComboExpandedestPlugin.Combos
             {
                 if (level >= GNB.Levels.BowShock && level >= GNB.Levels.SonicBreak)
                 {
-                    if (GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5 && IsActionOffCooldown(GNB.SonicBreak))
+                    if (GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5 && IsActionOffCooldown(GNB.SonicBreak) && IsEnabled(CustomComboPreset.GunbreakerBowShockSonicBreakOption))
                         return GNB.SonicBreak;
                     return CalcBestAction(actionID, GNB.BowShock, GNB.SonicBreak);
                 }
@@ -237,7 +237,7 @@ namespace XIVComboExpandedestPlugin.Combos
             var gauge = GetJobGauge<GNBGauge>();
             if (gauge.Ammo >= 2 && HasEffect(GNB.Buffs.NoMercy))
             {
-                if (GetCooldown(GNB.SolidBarrel).CooldownRemaining >= 0.5 && IsActionOffCooldown(GNB.BowShock) && IsEnabled(CustomComboPreset.GunbreakerNoMercyFeature))
+                if (GetCooldown(GNB.SolidBarrel).CooldownRemaining >= 0.5 && !IsEnabled(CustomComboPreset.GunbreakerBowShockSonicBreakOption) && IsActionOffCooldown(GNB.BowShock) && IsEnabled(CustomComboPreset.GunbreakerNoMercyFeature))
                     return GNB.BowShock;
                 if (IsActionOffCooldown(GNB.DoubleDown) && level >= GNB.Levels.DoubleDown)
                     return GNB.DoubleDown;
@@ -257,7 +257,7 @@ namespace XIVComboExpandedestPlugin.Combos
             {
                 if (HasEffect(GNB.Buffs.NoMercy))
                 {
-                    if (GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5 && IsActionOffCooldown(GNB.SonicBreak))
+                    if (GetCooldown(GNB.SolidBarrel).CooldownRemaining < 0.5 && IsActionOffCooldown(GNB.SonicBreak) && IsEnabled(CustomComboPreset.GunbreakerBowShockSonicBreakOption))
                         return GNB.SonicBreak;
                     var bowCd = GetCooldown(GNB.BowShock);
                     var sonicCd = GetCooldown(GNB.SonicBreak);

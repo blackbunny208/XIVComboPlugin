@@ -167,6 +167,13 @@ namespace XIVComboExpandedestPlugin.Combos
         protected static uint OriginalHook(uint actionID) => Service.IconReplacer.OriginalHook(actionID);
 
         /// <summary>
+        /// Gets bool determining if action is greyed out or not.
+        /// </summary>
+        /// <param name="actionID">Action ID.</param>
+        /// <returns>A bool value of whether the action can be used or not.</returns>
+        protected static bool CanUseAction(uint actionID) => Service.IconReplacer.CanUseAction(actionID);
+
+        /// <summary>
         /// Determine if the given preset is enabled.
         /// </summary>
         /// <param name="preset">Preset to check.</param>
