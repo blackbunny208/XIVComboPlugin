@@ -162,7 +162,7 @@ namespace XIVComboExpandedestPlugin
         BardIronJawsFeaturePlus = 2303,
 
         [OrderedEnum]
-        [CustomComboInfo("Quick Nock/Ladonsbite into Apex Arrow", "Replaces Quick Nock/Ladonsbite with Apex Arrow when gauge is 80 or above.", BRD.JobID, BRD.QuickNock, BRD.Ladonsbite)]
+        [CustomComboInfo("Quick Nock/Ladonsbite into Apex Arrow", "Replaces Quick Nock/Ladonsbite with Apex Arrow when gauge is 80 or above.", BRD.JobID, BRD.ApexArrow)]
         BardApexFeature = 2304,
 
         [OrderedEnum]

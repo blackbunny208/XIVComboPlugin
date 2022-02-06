@@ -110,7 +110,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     var empCD = GetCooldown(BRD.EmpyrealArrow);
                     var swCD = GetCooldown(BRD.Sidewinder);
 
-                    if (!pitchCD.IsCooldown && gauge.Repertoire == 3 && gauge.Song == Song.WANDERER)
+                    if (gauge.Song == Song.WANDERER && !pitchCD.IsCooldown && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000)))
                         return BRD.PitchPerfect;
 
                     if (!bloodCD.IsCooldown)
@@ -122,7 +122,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
                         return BRD.Sidewinder;
 
-                    return BRD.Bloodletter;
+                    if (bloodCD.CooldownRemaining <= 30) return BRD.Bloodletter;
                 }
 
                 // if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 100 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
@@ -202,24 +202,49 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
-    /*
     internal class BardApexFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.BardApexFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
+            /*if (actionID == BRD.QuickNock || actionID == BRD.Ladonsbite)
             {
                 var gauge = GetJobGauge<BRDGauge>();
                 if (gauge.SoulVoice >= 80 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow)
                     return OriginalHook(BRD.ApexArrow);
+            }*/
+            if (actionID == BRD.ApexArrow)
+            {
+                var globalCD = GetCooldown(BRD.ApexArrow);
+                var gauge = GetJobGauge<BRDGauge>();
+
+                if (globalCD.CooldownRemaining > 0.7 && IsEnabled(CustomComboPreset.BardOGCDFeature))
+                {
+                    var pitchCD = GetCooldown(BRD.PitchPerfect);
+                    var bloodCD = GetCooldown(BRD.Bloodletter);
+                    var empCD = GetCooldown(BRD.EmpyrealArrow);
+                    var swCD = GetCooldown(BRD.Sidewinder);
+
+                    if (gauge.Song == Song.WANDERER && !pitchCD.IsCooldown && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000)))
+                        return BRD.PitchPerfect;
+
+                    if (!bloodCD.IsCooldown)
+                        return BRD.Bloodletter;
+
+                    if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
+                        return BRD.EmpyrealArrow;
+
+                    if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
+                        return BRD.Sidewinder;
+
+                    if (bloodCD.CooldownRemaining <= 30) return BRD.Bloodletter;
+                }
             }
 
-            return actionID;
+            return BRD.ApexArrow;
         }
     }
-    */
 
     internal class BardShadowbiteFeature : CustomCombo
     {
@@ -239,11 +264,14 @@ namespace XIVComboExpandedestPlugin.Combos
                     var empCD = GetCooldown(BRD.EmpyrealArrow);
                     var swCD = GetCooldown(BRD.Sidewinder);
 
-                    if (!pitchCD.IsCooldown && gauge.Repertoire == 3 && gauge.Song == Song.WANDERER)
-                        return BRD.PitchPerfect;
+                    if (HasEffect(BRD.Buffs.ShadowbiteReady))
+                        return BRD.Barrage;
 
                     if (!rainCD.IsCooldown)
                         return BRD.RainOfDeath;
+
+                    if (gauge.Song == Song.WANDERER && !pitchCD.IsCooldown && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000)))
+                        return BRD.PitchPerfect;
 
                     if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
                         return BRD.EmpyrealArrow;
@@ -251,7 +279,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
                         return BRD.Sidewinder;
 
-                    return BRD.RainOfDeath;
+                    if (rainCD.CooldownRemaining <= 30) return BRD.RainOfDeath;
                 }
 
                 if (IsEnabled(CustomComboPreset.BardApexFeature) && (gauge.SoulVoice == 80 || OriginalHook(BRD.ApexArrow) != BRD.ApexArrow))
