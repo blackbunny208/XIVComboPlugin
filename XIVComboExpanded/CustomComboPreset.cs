@@ -564,6 +564,11 @@ namespace XIVComboExpandedestPlugin
         MonkPerfectBalanceFeature = 2004,
 
         [OrderedEnum]
+        [ParentCombo(MonkPerfectBalanceFeature)]
+        [CustomComboInfo("Perfect Balance Feature: Lockout", "Perfect Balance becomes a useless action while Perfect Balance is active.\nDoes not work with the Experimental Monk Combos.", MNK.JobID, MNK.PerfectBalance)]
+        MonkPerfectBalanceFeatureLockout = 2021,
+
+        [OrderedEnum]
         [CustomComboInfo("Riddle of Fire to Brotherhood", "Riddle of Fire becomes Brotherhood if the former is on cooldown and the latter is not.", MNK.JobID, MNK.RiddleOfFire)]
         MonkRiddleToBrotherFeature = 2011,
 

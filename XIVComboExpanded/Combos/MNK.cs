@@ -394,6 +394,8 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == MNK.PerfectBalance)
             {
+                if (HasEffect(MNK.Buffs.PerfectBalance) && IsEnabled(CustomComboPreset.MonkPerfectBalanceFeatureLockout))
+                    return SMN.Physick;
                 if (OriginalHook(MNK.MasterfulBlitz) != MNK.MasterfulBlitz && CanUseAction(OriginalHook(MNK.MasterfulBlitz)))
                     return OriginalHook(MNK.MasterfulBlitz);
             }

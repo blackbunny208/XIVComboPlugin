@@ -195,8 +195,12 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == NIN.Kassatsu)
             {
-                if ((HasEffect(NIN.Buffs.Suiton) && !IsActionOffCooldown(NIN.Kassatsu)) || HasEffect(NIN.Buffs.Hidden))
+                if ((HasEffect(NIN.Buffs.Suiton) && (!IsActionOffCooldown(NIN.Kassatsu))) || HasEffect(NIN.Buffs.Hidden) || !CanUseAction(NIN.Kassatsu))
+                {
+                    if (IsEnabled(CustomComboPreset.NinjaKassatsuDWaDFeature) && !CanUseAction(NIN.Kassatsu) && !HasEffect(NIN.Buffs.Suiton) && !HasEffect(NIN.Buffs.Hidden))
+                        return OriginalHook(NIN.DreamWithinADream);
                     return NIN.TrickAttack;
+                }
             }
 
             return actionID;
@@ -209,7 +213,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return (!IsActionOffCooldown(NIN.Kassatsu) && IsActionOffCooldown(NIN.DreamWithinADream)) || level < NIN.Levels.Kassatsu ? OriginalHook(NIN.DreamWithinADream) : actionID;
+            return (!IsActionOffCooldown(NIN.Kassatsu) && IsActionOffCooldown(NIN.DreamWithinADream)) || !CanUseAction(NIN.Kassatsu) ? OriginalHook(NIN.DreamWithinADream) : actionID;
         }
     }
 
