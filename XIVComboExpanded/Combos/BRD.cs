@@ -116,10 +116,10 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (!bloodCD.IsCooldown)
                         return BRD.Bloodletter;
 
-                    if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
+                    if (!empCD.IsCooldown && CanUseAction(BRD.EmpyrealArrow))
                         return BRD.EmpyrealArrow;
 
-                    if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
+                    if (!swCD.IsCooldown && CanUseAction(BRD.Sidewinder))
                         return BRD.Sidewinder;
 
                     if (bloodCD.CooldownRemaining <= 30) return BRD.Bloodletter;
@@ -232,10 +232,10 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (!bloodCD.IsCooldown)
                         return BRD.Bloodletter;
 
-                    if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
+                    if (!empCD.IsCooldown && CanUseAction(BRD.EmpyrealArrow))
                         return BRD.EmpyrealArrow;
 
-                    if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
+                    if (!swCD.IsCooldown && CanUseAction(BRD.Sidewinder))
                         return BRD.Sidewinder;
 
                     if (bloodCD.CooldownRemaining <= 30) return BRD.Bloodletter;
@@ -273,10 +273,10 @@ namespace XIVComboExpandedestPlugin.Combos
                     if (gauge.Song == Song.WANDERER && !pitchCD.IsCooldown && (gauge.Repertoire == 3 || (gauge.Repertoire >= 1 && gauge.SongTimer <= 3000)))
                         return BRD.PitchPerfect;
 
-                    if (!empCD.IsCooldown && level >= BRD.Levels.EmpyrealArrow)
+                    if (!empCD.IsCooldown && CanUseAction(BRD.EmpyrealArrow))
                         return BRD.EmpyrealArrow;
 
-                    if (!swCD.IsCooldown && level >= BRD.Levels.Sidewinder)
+                    if (!swCD.IsCooldown && CanUseAction(BRD.Sidewinder))
                         return BRD.Sidewinder;
 
                     if (rainCD.CooldownRemaining <= 30) return BRD.RainOfDeath;
@@ -307,7 +307,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 var gauge = GetJobGauge<BRDGauge>();
 
                 // return sprint if they don't have any songs unlocked.
-                if (level < BRD.Levels.MagesBallad)
+                if (!CanUseAction(BRD.MagesBallad))
                     return BRD.Peloton;
 
                 // return whichever is highest priority and off CD for lvl 90
@@ -322,17 +322,17 @@ namespace XIVComboExpandedestPlugin.Combos
                 }
 
                 // return whichever is highest priority and off CD
-                if (!wmCD.IsCooldown && level >= BRD.Levels.WanderersMinuet)
+                if (!wmCD.IsCooldown && CanUseAction(BRD.WanderersMinuet))
                     return BRD.WanderersMinuet;
                 if (!mbCD.IsCooldown)
                     return BRD.MagesBallad;
-                if (!apCD.IsCooldown && level >= BRD.Levels.ArmysPaeon)
+                if (!apCD.IsCooldown && CanUseAction(BRD.ArmysPaeon))
                     return BRD.ArmysPaeon;
 
                 // if all three are on CD, return whichever is shortest CD for visibility
-                if (wmCD.CooldownRemaining <= mbCD.CooldownRemaining && wmCD.CooldownRemaining <= apCD.CooldownRemaining && level >= BRD.Levels.WanderersMinuet)
+                if (wmCD.CooldownRemaining <= mbCD.CooldownRemaining && wmCD.CooldownRemaining <= apCD.CooldownRemaining && CanUseAction(BRD.WanderersMinuet))
                     return BRD.WanderersMinuet;
-                if (apCD.CooldownRemaining <= mbCD.CooldownRemaining && level >= BRD.Levels.ArmysPaeon)
+                if (apCD.CooldownRemaining <= mbCD.CooldownRemaining && CanUseAction(BRD.ArmysPaeon))
                     return BRD.ArmysPaeon;
                 return BRD.MagesBallad;
             }
