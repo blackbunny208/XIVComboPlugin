@@ -5,5 +5,17 @@
   "Description": "This is an enhanced version of XIVCombo with a variety of new added features.\nThis is mutually exclusive with other XIVCombo versions, so make sure they do not conflict!",
   "RepoUrl": "https://github.com/blackbunny208/XIVComboPluginExpandedest",
   "IconUrl": "https://raw.githubusercontent.com/blackbunny208/XIVComboPluginExpandedest/master/res/icon.png",
-  "ImageUrls": []
+  "ImageUrls": [],
+  "Changelog":
+"1.3.0.0: 6.1 changes.
+				 All Kaiten-based features are removed, for what should be obvious reasons.
+				 Jump to Mirage Dive removed (now implemented in-game).
+				 Searing Light removed from Carby Feature.
+				 Wanderer's to Pitch Perfect removed (now implemented in-game).
+				 Dancer Flourish Proc Saver removed, as now the procs Flourish provides are separate from your normal combo procs.
+				 Warrior combos to Fell Cleave removed due to changes to Inner Release. AoE functionality still the same.
+				 Overpower combo no longer defaults to Mythril Tempest if you have no target.
+				 Storm's Path to Storm's Eye added. Only functions if the buff isn't up, so you will still need to keep Storm's Eye on your bar for upkeep.
+
+If a recent change isn't documented on this changelog, it is because it doesn't affect plugin functionality, or is a minor bugfix.",
 }

@@ -52,7 +52,7 @@ namespace XIVComboExpandedestPlugin.Attributes
         {
             return key switch
             {
-                0 => "All Classes",
+                0 => "Multiple Classes/DoL",
                 1 => "Gladiator",
                 2 => "Pugilist",
                 3 => "Marauder",

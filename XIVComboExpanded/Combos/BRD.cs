@@ -37,6 +37,7 @@ namespace XIVComboExpandedestPlugin.Combos
             Ladonsbite = 25783,
             EmpyrealArrow = 3558,
             Sidewinder = 3562,
+            BlastArrow = 25784,
             RadiantFinale = 25785;
 
         public static class Buffs
@@ -72,23 +73,6 @@ namespace XIVComboExpandedestPlugin.Combos
                 MagesBallad = 30,
                 ArmysPaeon = 40,
                 RadiantFinale = 90;
-        }
-    }
-
-    internal class BardWanderersPitchPerfectFeature : CustomCombo
-    {
-        protected override CustomComboPreset Preset => CustomComboPreset.BardWanderersPitchPerfectFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == BRD.WanderersMinuet)
-            {
-                var gauge = GetJobGauge<BRDGauge>();
-                if (gauge.Song == Song.WANDERER)
-                    return BRD.PitchPerfect;
-            }
-
-            return actionID;
         }
     }
 
@@ -387,7 +371,8 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return !TargetHasEffect(BRD.Debuffs.CausticBite) && !TargetHasEffect(BRD.Debuffs.Stormbite) && !TargetHasEffect(BRD.Debuffs.Windbite) && !TargetHasEffect(BRD.Debuffs.VenomousBite) && CanUseAction(BRD.RainOfDeath) ? BRD.RainOfDeath : BRD.Bloodletter;
+            // return !TargetHasEffect(BRD.Debuffs.CausticBite) && !TargetHasEffect(BRD.Debuffs.Stormbite) && !TargetHasEffect(BRD.Debuffs.Windbite) && !TargetHasEffect(BRD.Debuffs.VenomousBite) && CanUseAction(BRD.RainOfDeath) ? BRD.RainOfDeath : BRD.Bloodletter;
+            return (this.FilteredLastComboMove == OriginalHook(BRD.QuickNock) || this.FilteredLastComboMove == OriginalHook(BRD.Shadowbite)) && CanUseAction(BRD.RainOfDeath) ? BRD.RainOfDeath : BRD.Bloodletter;
         }
     }
 }

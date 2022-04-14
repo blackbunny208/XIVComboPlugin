@@ -20,21 +20,32 @@ namespace XIVComboExpandedestPlugin.Combos
             AeolianEdge = 2255,
             TrickAttack = 2258,
             Ninjutsu = 2260,
+            Ten = 2259,
             Chi = 2261,
-            JinNormal = 2263,
+            Jin = 2263,
             Kassatsu = 2264,
             ArmorCrush = 3563,
             DreamWithinADream = 3566,
             TenChiJin = 7403,
             HakkeMujinsatsu = 16488,
             Meisui = 16489,
-            Jin = 18807,
+            JinMudra = 18807,
             Bunshin = 16493,
             Huraijin = 25876,
             PhantomKamaitachi = 25774,
             ForkedRaiju = 25777,
             FleetingRaiju = 25778,
-            ThrowingDagger = 2247;
+            ThrowingDagger = 2247,
+            Raiton = 2267,
+            Katon = 2266,
+            Hyoton = 2268,
+            Huton = 2269,
+            Doton = 2270,
+            Suiton = 2271,
+            Goka = 16491,
+            Hyosho = 16492,
+            Bhavacakra = 7402,
+            HellfrogMedium = 7401;
 
         public static class Buffs
         {
@@ -64,6 +75,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 ArmorCrush = 54,
                 DreamWithinADream = 56,
                 Huraijin = 60,
+                Bhavacakra = 68,
                 Meisui = 72,
                 EnhancedKassatsu = 76,
                 Bunshin = 80,
@@ -151,6 +163,12 @@ namespace XIVComboExpandedestPlugin.Combos
                             return InMeleeRange() ? NIN.FleetingRaiju : NIN.ForkedRaiju;
                         return NIN.FleetingRaiju;
                     }
+                }
+
+                if (IsEnabled(CustomComboPreset.NinjaThrowingEdgeFeature))
+                {
+                    if (CanUseAction(NIN.ThrowingDagger) && !InMeleeRange())
+                        return NIN.ThrowingDagger;
                 }
 
                 if (comboTime > 0)
@@ -243,6 +261,32 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class NinjaTapNinjutsuFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.NinjaTapNinjutsuFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == NIN.Ten || actionID == NIN.Chi || actionID == NIN.Jin)
+            {
+                var ninjutsu = OriginalHook(NIN.Ninjutsu);
+
+                if ((ninjutsu == NIN.Goka || ninjutsu == NIN.Hyosho || ninjutsu == NIN.Huton || ninjutsu == NIN.Doton || ninjutsu == NIN.Suiton)
+                    ||
+                    (ninjutsu == NIN.Raiton && actionID == NIN.Chi)
+                    ||
+                    (ninjutsu == NIN.Katon && actionID == NIN.Ten)
+                    ||
+                    (ninjutsu == NIN.Hyoton && actionID == NIN.Jin)
+                    ||
+                    (!CanUseAction(OriginalHook(NIN.Chi)) && ninjutsu != NIN.Ninjutsu && actionID == NIN.Ten))
+                    return ninjutsu;
+            }
+
+            return actionID;
+        }
+    }
+
     internal class NinjaKassatsuChiJinFeature : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.NinjaKassatsuChiJinFeature;
@@ -252,7 +296,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (actionID == NIN.Chi)
             {
                 if (level >= NIN.Levels.EnhancedKassatsu && HasEffect(NIN.Buffs.Kassatsu))
-                    return NIN.Jin;
+                    return NIN.JinMudra;
             }
 
             return actionID;
@@ -314,6 +358,16 @@ namespace XIVComboExpandedestPlugin.Combos
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             return lastComboMove == NIN.GustSlash && comboTime > 0 ? NIN.ArmorCrush : actionID;
+        }
+    }
+
+    internal class NinjaBhavacakraToFroggieFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.NinjaBhavacakraToFroggieFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return lastComboMove == NIN.DeathBlossom || lastComboMove == NIN.HakkeMujinsatsu || level < NIN.Levels.Bhavacakra ? NIN.HellfrogMedium : actionID;
         }
     }
 }

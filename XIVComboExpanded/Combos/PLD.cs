@@ -27,11 +27,13 @@ namespace XIVComboExpandedestPlugin.Combos
             BladeOfValor = 25750,
             SpiritsWithin = 29,
             Expiacion = 25747,
-            CircleOfScorn = 23;
+            CircleOfScorn = 23,
+            ShieldLob = 24;
 
         public static class Buffs
         {
             public const ushort
+                FightOrFlight = 76,
                 Requiescat = 1368,
                 SwordOath = 1902;
         }
@@ -82,10 +84,18 @@ namespace XIVComboExpandedestPlugin.Combos
 
     internal class PaladinAtonementFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.PaladinAtonementFeature;
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinRoyalAuthorityAtonementFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
+            if (IsEnabled(CustomComboPreset.PaladinRoyalSpiritFeature))
+            {
+                if ((HasEffect(PLD.Buffs.Requiescat) && !HasEffect(PLD.Buffs.FightOrFlight))
+                    ||
+                    (IsEnabled(CustomComboPreset.PaladinConfiteorFeature) && OriginalHook(PLD.Confiteor) != PLD.Confiteor))
+                return actionID;
+            }
+
             return HasEffect(PLD.Buffs.SwordOath) && lastComboMove != PLD.FastBlade && lastComboMove != PLD.RiotBlade ? PLD.Atonement : actionID;
         }
     }
@@ -151,6 +161,33 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == PLD.RoyalAuthority || actionID == PLD.RageOfHalone)
             {
+                if (IsEnabled(CustomComboPreset.PaladinRoyalSpiritFeature))
+                {
+                    if (IsEnabled(CustomComboPreset.PaladinConfiteorFeature))
+                    {
+                        if (OriginalHook(PLD.Confiteor) != PLD.Confiteor)
+                            return OriginalHook(PLD.Confiteor);
+                    }
+
+                    Status? requiescat = FindEffect(PLD.Buffs.Requiescat);
+
+                    if (requiescat != null && !HasEffect(PLD.Buffs.FightOrFlight) && LocalPlayer?.CurrentMp >= 1000)
+                    {
+                        if (requiescat.StackCount <= 1 && level >= PLD.Levels.Confiteor && IsEnabled(CustomComboPreset.PaladinConfiteorFeature))
+                        {
+                            return OriginalHook(PLD.Confiteor);
+                        }
+
+                        return PLD.HolySpirit;
+                    }
+                }
+
+                if (IsEnabled(CustomComboPreset.PaladinRoyalLobFeature))
+                {
+                    if (CanUseAction(PLD.ShieldLob) && !InMeleeRange())
+                        return PLD.ShieldLob;
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == PLD.FastBlade && level >= PLD.Levels.RiotBlade)
@@ -228,6 +265,22 @@ namespace XIVComboExpandedestPlugin.Combos
                     return OriginalHook(PLD.Confiteor);
 
                 return PLD.Requiescat;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class PaladinHolySpiritToHolyCircleFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.PaladinHolySpiritToHolyCircleFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == PLD.HolySpirit)
+            {
+                if ((this.FilteredLastComboMove == PLD.Prominence || this.FilteredLastComboMove == PLD.TotalEclipse) && level >= PLD.Levels.HolyCircle)
+                    return PLD.HolyCircle;
             }
 
             return actionID;

@@ -141,7 +141,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return ((IsActionOffCooldown(MCH.Wildfire) && LocalPlayer?.TargetObject is not null) || (OriginalHook(MCH.Wildfire) != MCH.Wildfire && !IsActionOffCooldown(MCH.Hypercharge))) && CanUseAction(MCH.Wildfire) && actionID == MCH.Hypercharge ? OriginalHook(MCH.Wildfire) : actionID;
+            return ((IsActionOffCooldown(MCH.Wildfire) && CurrentTarget is not null) || (OriginalHook(MCH.Wildfire) != MCH.Wildfire && !IsActionOffCooldown(MCH.Hypercharge))) && CanUseAction(MCH.Wildfire) && actionID == MCH.Hypercharge ? OriginalHook(MCH.Wildfire) : actionID;
         }
     }
 

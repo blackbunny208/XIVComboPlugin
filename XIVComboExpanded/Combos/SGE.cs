@@ -1,4 +1,7 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using System;
+using System.Numerics;
+
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 
 namespace XIVComboExpandedestPlugin.Combos
@@ -9,6 +12,8 @@ namespace XIVComboExpandedestPlugin.Combos
 
         public const uint
             Dosis = 24283,
+            Dosis2 = 24306,
+            Dosis3 = 24312,
             Diagnosis = 24284,
             Prognosis = 24286,
             Holos = 24310,
@@ -52,6 +57,7 @@ namespace XIVComboExpandedestPlugin.Combos
             public const ushort
                 Dosis = 1,
                 Prognosis = 10,
+                Phlegma = 26,
                 Soteria = 35,
                 Druochole = 45,
                 Kerachole = 50,
@@ -80,6 +86,44 @@ namespace XIVComboExpandedestPlugin.Combos
                 if (HasEffect(SGE.Buffs.Kardia) && IsActionOffCooldown(SGE.Soteria))
                     return SGE.Soteria;
                 return SGE.Kardia;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SagePhlegmaMovementFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SagePhlegmaMovementFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SGE.Dosis || actionID == SGE.Dosis2 || actionID == SGE.Dosis3)
+            {
+                if (this.IsMoving && level >= SGE.Levels.Phlegma && !GetJobGauge<SGEGauge>().Eukrasia && GetTargetDistance() <= 6)
+                {
+                    if (GetCooldown(OriginalHook(SGE.Phlegma)).CooldownRemaining > 45)
+                            return actionID;
+
+                    return OriginalHook(SGE.Phlegma);
+                }
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class SageToxikonMovementFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SageToxikonMovementFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SGE.Dosis || actionID == SGE.Dosis2 || actionID == SGE.Dosis3)
+            {
+                var gauge = GetJobGauge<SGEGauge>();
+                if (this.IsMoving && gauge.Addersting > 0 && !gauge.Eukrasia)
+                    return OriginalHook(SGE.Toxikon);
             }
 
             return actionID;
@@ -127,15 +171,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
             var gauge = GetJobGauge<SGEGauge>();
 
-            if (level >= SGE.Levels.Dosis3)
-                if (GetCooldown(SGE.Phlegmaga).CooldownRemaining > 45 && gauge.Addersting > 0)
-                    return OriginalHook(SGE.Toxikon);
-
-            if (level >= SGE.Levels.Dosis2)
-                if (GetCooldown(SGE.Phlegmara).CooldownRemaining > 45 && gauge.Addersting > 0)
-                    return OriginalHook(SGE.Toxikon);
-
-            if (GetCooldown(SGE.Phlegma).CooldownRemaining > 45 && gauge.Addersting > 0)
+            if ((GetCooldown(OriginalHook(SGE.Phlegma)).CooldownRemaining > 45 || GetTargetDistance() > 6) && gauge.Addersting > 0)
                 return OriginalHook(SGE.Toxikon);
 
             return actionID;
@@ -151,15 +187,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (CurrentTarget is null)
                 return OriginalHook(SGE.Dyskrasia);
 
-            if (level >= SGE.Levels.Dosis3)
-                if (GetCooldown(SGE.Phlegmaga).CooldownRemaining > 45)
-                    return OriginalHook(SGE.Dyskrasia);
-
-            if (level >= SGE.Levels.Dosis2)
-                if (GetCooldown(SGE.Phlegmara).CooldownRemaining > 45)
-                    return OriginalHook(SGE.Dyskrasia);
-
-            if (GetCooldown(SGE.Phlegma).CooldownRemaining > 45)
+            if (GetCooldown(OriginalHook(SGE.Phlegma)).CooldownRemaining > 45)
                 return OriginalHook(SGE.Dyskrasia);
 
             return actionID;

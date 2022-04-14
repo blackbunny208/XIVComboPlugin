@@ -29,6 +29,8 @@ namespace XIVComboExpandedestPlugin
         /// <param name="pluginInterface">Dalamud plugin interface.</param>
         public XIVComboExpandedestPlugin(DalamudPluginInterface pluginInterface)
         {
+            FFXIVClientStructs.Resolver.Initialize();
+
             pluginInterface.Create<Service>();
 
             Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();

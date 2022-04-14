@@ -24,7 +24,8 @@ namespace XIVComboExpandedestPlugin.Combos
             FatedCircle = 16163,
             Bloodfest = 16164,
             DoubleDown = 25760,
-            Hypervelocity = 25759;
+            Hypervelocity = 25759,
+            LightningShot = 16143;
 
         public static class Buffs
         {
@@ -68,6 +69,12 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == GNB.SolidBarrel)
             {
+                if (IsEnabled(CustomComboPreset.GunbreakerSolidShotFeature))
+                {
+                    if (CanUseAction(GNB.LightningShot) && !InMeleeRange())
+                        return GNB.LightningShot;
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == GNB.KeenEdge && level >= GNB.Levels.BrutalShell)
@@ -191,6 +198,22 @@ namespace XIVComboExpandedestPlugin.Combos
                 var gauge = GetJobGauge<GNBGauge>();
                 if (gauge.Ammo == 0 && level >= GNB.Levels.Bloodfest)
                     return GNB.Bloodfest;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class GunbreakerBurstStrikeToFatedCircleFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.GunbreakerBurstStrikeToFatedCircleFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == GNB.BurstStrike)
+            {
+                if (level >= GNB.Levels.FatedCircle && (lastComboMove == GNB.DemonSlice || lastComboMove == GNB.DemonSlaughter))
+                    return GNB.FatedCircle;
             }
 
             return actionID;

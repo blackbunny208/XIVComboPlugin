@@ -38,13 +38,13 @@ namespace XIVComboExpandedestPlugin
         /// <inheritdoc/>
         protected override void Setup64Bit(SigScanner scanner)
         {
-            this.ComboTimer = scanner.GetStaticAddressFromSig("48 89 2D ?? ?? ?? ?? 85 C0 74 0F");
+            this.ComboTimer = scanner.GetStaticAddressFromSig("F3 0F 11 05 ?? ?? ?? ?? F3 0F 10 45 ?? E8");
 
             this.GetAdjustedActionId = scanner.ScanText("E8 ?? ?? ?? ?? 8B F8 3B DF");  // Client::Game::ActionManager.GetAdjustedActionId
 
             this.IsActionIdReplaceable = scanner.ScanText("81 F9 ?? ?? ?? ?? 7F 35");
 
-            this.GetActionCooldown = scanner.ScanText("E8 ?? ?? ?? ?? 0F 57 FF 48 85 C0");
+            this.GetActionCooldown = scanner.ScanText("E8 ?? ?? ?? ?? 48 85 C0 74 18 80 38 00");
 
             PluginLog.Verbose("===== X I V C O M B O =====");
             PluginLog.Verbose($"GetAdjustedActionId   0x{this.GetAdjustedActionId:X}");

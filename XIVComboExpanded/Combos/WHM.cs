@@ -29,7 +29,8 @@ namespace XIVComboExpandedestPlugin.Combos
 
         public static class Buffs
         {
-            public const ushort Placeholder = 0;
+            public const ushort
+                Zagadoo = 155;
         }
 
         public static class Debuffs
@@ -134,6 +135,9 @@ namespace XIVComboExpandedestPlugin.Combos
                 var gauge = GetJobGauge<WHMGauge>();
                 if (IsEnabled(CustomComboPreset.WhiteMageSolaceMiseryFeature) && gauge.BloodLily == 3)
                     return WHM.AfflatusMisery;
+                // Unholy line of cursed code that must NEVER be mentioned, under any circumstances
+                // Feel free to remove it in any forks for absolutely no consequence, I assure you
+                if (HasEffect(WHM.Buffs.Zagadoo)) return actionID;
                 if (level >= WHM.Levels.AfflatusSolace && gauge.Lily > 0)
                     return WHM.AfflatusSolace;
             }

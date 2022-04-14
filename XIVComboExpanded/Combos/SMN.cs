@@ -96,6 +96,22 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
+    internal class SummonerSearingDemiFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.SummonerSearingDemiFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SMN.SummonBahamut || actionID == SMN.SummonPhoenix || actionID == SMN.DreadwyrmTrance || actionID == SMN.Aethercharge)
+            {
+                if (LocalPlayer is not null && IsActionOffCooldown(SMN.SearingLight) && IsActionOffCooldown(OriginalHook(SMN.SummonBahamut)) && level >= SMN.Levels.SearingLight && LocalPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.InCombat))
+                    return SMN.SearingLight;
+            }
+
+            return actionID;
+        }
+    }
+
     internal class SummonerDemiCombo : CustomCombo
     {
         protected override CustomComboPreset Preset => CustomComboPreset.SummonerDemiCombo;

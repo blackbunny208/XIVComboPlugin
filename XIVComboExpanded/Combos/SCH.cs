@@ -28,7 +28,12 @@ namespace XIVComboExpandedestPlugin.Combos
             Recitation = 16542,
             EmergencyTactics = 3586,
             DeploymentTactics = 3585,
-            Ruin2 = 17870;
+            Ruin = 17869,
+            Ruin2 = 17870,
+            Broil = 3584,
+            Broil2 = 7435,
+            Broil3 = 16541,
+            Broil4 = 25865;
 
         public static class Buffs
         {
@@ -71,6 +76,22 @@ namespace XIVComboExpandedestPlugin.Combos
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             return IsActionOffCooldown(SCH.ChainStratagem) && GetCooldown(SCH.Ruin2).CooldownRemaining >= 0.5 && level >= SCH.Levels.ChainStratagem ? SCH.ChainStratagem : actionID;
+        }
+    }
+
+    internal class ScholarRuin2MovementFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ScholarRuin2MovementFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == SCH.Ruin || actionID == SCH.Broil || actionID == SCH.Broil2 || actionID == SCH.Broil3 || actionID == SCH.Broil4)
+            {
+                if (this.IsMoving)
+                    return SCH.Ruin2;
+            }
+
+            return actionID;
         }
     }
 

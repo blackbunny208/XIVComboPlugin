@@ -21,11 +21,13 @@ namespace XIVComboExpandedestPlugin.Combos
             ShadowOfDeath = 24378,
             BloodStalk = 24389,
             Gluttony = 24393,
+            Harpe = 24386,
             // AoE
             SpinningScythe = 24376,
             NightmareScythe = 24377,
             Guillotine = 24384,
             GrimSwathe = 24392,
+            SoulScythe = 24381,
             // Shroud
             Enshroud = 24394,
             Communio = 24398,
@@ -61,9 +63,11 @@ namespace XIVComboExpandedestPlugin.Combos
             public const byte
                 Slice = 1,
                 WaxingSlice = 5,
+                Harpe = 15,
                 SpinningScythe = 25,
                 InfernalSlice = 30,
                 NightmareScythe = 45,
+                GrimSwathe = 55,
                 Gluttony = 76,
                 Enshroud = 80,
                 Soulsow = 82,
@@ -118,7 +122,7 @@ namespace XIVComboExpandedestPlugin.Combos
                     return RPR.Soulsow;
             }
 
-            if (OriginalHook(RPR.Soulsow) == RPR.HarvestMoon && actionID == (IsEnabled(CustomComboPreset.ReaperNightmareScytheCombo) ? RPR.NightmareScythe : RPR.SpinningScythe) && LocalPlayer?.TargetObject is not null && level >= RPR.Levels.Soulsow && !HasEffect(RPR.Buffs.SoulReaver))
+            if (OriginalHook(RPR.Soulsow) == RPR.HarvestMoon && actionID == (IsEnabled(CustomComboPreset.ReaperNightmareScytheCombo) ? RPR.NightmareScythe : RPR.SpinningScythe) && CurrentTarget is not null && level >= RPR.Levels.Soulsow && !HasEffect(RPR.Buffs.SoulReaver))
                 return RPR.HarvestMoon;
 
             return actionID;
@@ -156,7 +160,7 @@ namespace XIVComboExpandedestPlugin.Combos
             var gauge = GetJobGauge<RPRGauge>();
 
             if (gauge.VoidShroud >= 2)
-                return OriginalHook(actionID);
+                return IsEnabled(CustomComboPreset.ReaperBloodStalkToGrimSwatheFeature) && (lastComboMove == RPR.SpinningScythe || lastComboMove == RPR.NightmareScythe) ? OriginalHook(RPR.GrimSwathe) : OriginalHook(actionID);
 
             if (gauge.LemureShroud >= 1)
             {
@@ -166,14 +170,15 @@ namespace XIVComboExpandedestPlugin.Combos
                         return RPR.Communio;
                 }
 
-                if (actionID == RPR.GrimSwathe) return OriginalHook(RPR.Guillotine);
+                if (actionID == RPR.GrimSwathe ||
+                    (actionID == RPR.BloodStalk && IsEnabled(CustomComboPreset.ReaperBloodStalkToGrimSwatheFeature) && (lastComboMove == RPR.SpinningScythe || lastComboMove == RPR.NightmareScythe))) return OriginalHook(RPR.Guillotine);
 
                 return HasEffect(RPR.Buffs.EnhancedCrossReaping) ? OriginalHook(RPR.Gallows) : OriginalHook(RPR.Gibbet);
             }
 
             if (HasEffect(RPR.Buffs.SoulReaver))
             {
-                if (actionID == RPR.GrimSwathe) return RPR.Guillotine;
+                if (actionID == RPR.GrimSwathe || (actionID == RPR.BloodStalk && IsEnabled(CustomComboPreset.ReaperBloodStalkToGrimSwatheFeature) && (lastComboMove == RPR.SpinningScythe || lastComboMove == RPR.NightmareScythe))) return RPR.Guillotine;
                 return HasEffect(RPR.Buffs.EnhancedGallows) ? RPR.Gallows : RPR.Gibbet;
             }
 
@@ -193,6 +198,12 @@ namespace XIVComboExpandedestPlugin.Combos
 
                 if (OriginalHook(RPR.Soulsow) != RPR.HarvestMoon && !HasCondition(ConditionFlag.InCombat) && IsEnabled(CustomComboPreset.ReaperSoulsowReminderFeature) && level >= RPR.Levels.Soulsow)
                     return RPR.Soulsow;
+
+                if (IsEnabled(CustomComboPreset.ReaperHarpeSliceFeature))
+                {
+                    if (!(gauge.LemureShroud == 1 && level >= RPR.Levels.Communio) && !InMeleeRange() && level >= RPR.Levels.Harpe)
+                        return RPR.Harpe;
+                }
 
                 if (IsEnabled(CustomComboPreset.ReaperLemureFeature))
                 {
@@ -243,7 +254,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == (IsEnabled(CustomComboPreset.ReaperNightmareScytheCombo) ? RPR.NightmareScythe : RPR.SpinningScythe))
             {
-                if (OriginalHook(RPR.Soulsow) == RPR.HarvestMoon && IsEnabled(CustomComboPreset.ReaperSoulsowFeature) && LocalPlayer?.TargetObject is not null && level >= RPR.Levels.Soulsow && !HasEffect(RPR.Buffs.SoulReaver))
+                if (OriginalHook(RPR.Soulsow) == RPR.HarvestMoon && IsEnabled(CustomComboPreset.ReaperSoulsowFeature) && CurrentTarget is not null && level >= RPR.Levels.Soulsow && !HasEffect(RPR.Buffs.SoulReaver))
                     return RPR.HarvestMoon;
 
                 var gauge = GetJobGauge<RPRGauge>();
@@ -456,6 +467,26 @@ namespace XIVComboExpandedestPlugin.Combos
                 return RPR.Gluttony;
 
             return actionID;
+        }
+    }
+
+    internal class ReaperBloodStalkToGrimSwatheFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ReaperBloodStalkToGrimSwatheFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == RPR.BloodStalk && (lastComboMove == RPR.SpinningScythe || lastComboMove == RPR.NightmareScythe) && level >= RPR.Levels.GrimSwathe ? OriginalHook(RPR.GrimSwathe) : actionID;
+        }
+    }
+
+    internal class ReaperSoulSliceToSoulScytheFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.ReaperSoulSliceToSoulScytheFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == RPR.SoulSlice && (lastComboMove == RPR.SpinningScythe || lastComboMove == RPR.NightmareScythe) && CanUseAction(RPR.SoulScythe) ? RPR.SoulScythe : actionID;
         }
     }
 }

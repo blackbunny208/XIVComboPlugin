@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
@@ -60,6 +61,47 @@ namespace XIVComboExpandedestPlugin.Combos
         /// </summary>
         protected byte JobID { get; }
 
+        protected Vector2 Position { get; set; }
+
+        protected float PlayerSpeed { get; set; }
+
+        protected uint MovingCounter { get; set; }
+
+        protected bool IsMoving { get; set; }
+
+        protected uint FilteredLastComboMove { get; set; }
+
+        protected uint[] FilteredLastComboMoves { get; set; } = new uint[]
+        {
+            BRD.EmpyrealArrow,
+            BRD.RainOfDeath,
+            BRD.ApexArrow,
+            BRD.BlastArrow,
+            BRD.RadiantFinale,
+            PLD.HolyCircle,
+            PLD.Confiteor,
+            PLD.BladeOfFaith,
+            PLD.BladeOfTruth,
+            PLD.BladeOfValor,
+            DRG.FangAndClaw,
+            DRG.WheelingThrust,
+            RDM.Moulinet,
+            RDM.Manafication,
+            RDM.Verholy,
+            RDM.Verflare,
+            RDM.Scorch,
+            RDM.Resolution,
+            RDM.Impact,
+            RDM.Scatter,
+            3545, // Elixir Field
+            25882, // Flint Strike
+            3543, // Tornado Kick
+            25768, // Rising Phoenix
+            25769, // Phantom Rush
+            25765, // Celestial Revolution (AKA Monk Bunny)
+            0,
+        };
+
         /// <summary>
         /// Gets the action IDs associated with this combo.
         /// </summary>
@@ -78,6 +120,33 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             newActionID = 0;
 
+            if (!this.FilteredLastComboMoves.Contains(lastComboActionID))
+                this.FilteredLastComboMove = lastComboActionID;
+
+            // Reset filtered last combo move if out of combat.
+            if (LocalPlayer is not null && !HasCondition(ConditionFlag.InCombat))
+                this.FilteredLastComboMove = 0;
+
+            // Speed Calculation
+            if (this.MovingCounter == 0)
+            {
+                Vector2 newPosition = LocalPlayer is null ? Vector2.Zero : new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+
+                this.PlayerSpeed = Vector2.Distance(newPosition, this.Position);
+
+                this.IsMoving = this.PlayerSpeed > 0;
+
+                this.Position = LocalPlayer is null ? Vector2.Zero : newPosition;
+
+                // Ensure this runs only once every 50 Dalamud ticks to make sure we get an actual, accurate representation of speed, rather than just spamming 0.
+                this.MovingCounter = 50;
+            }
+
+            if (this.MovingCounter > 0)
+            {
+                this.MovingCounter--;
+            }
+
             if (!IsEnabled(this.Preset))
                 return false;
 
@@ -93,6 +162,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 return false;
 
             newActionID = resultingActionID;
+
             return true;
         }
 
@@ -299,16 +369,16 @@ namespace XIVComboExpandedestPlugin.Combos
         /// <returns>Double representing the distance from the target.</returns>
         protected static double GetTargetDistance()
         {
-            if (CurrentTarget is null)
+            if (CurrentTarget is null || LocalPlayer is null)
                 return 0;
 
-            if (CurrentTarget is not BattleChara chara)
+            if (CurrentTarget is not BattleChara chara || CurrentTarget.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc)
                 return 0;
 
-            double distanceX = chara.YalmDistanceX;
-            double distanceY = chara.YalmDistanceZ;
+            var position = new Vector2(chara.Position.X, chara.Position.Z);
+            var selfPosition = new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
 
-            return Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
+            return (Vector2.Distance(position, selfPosition) - chara.HitboxRadius) - LocalPlayer.HitboxRadius;
         }
 
         /// <summary>
@@ -322,7 +392,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (distance == 0)
                 return true;
 
-            if (distance > 3)
+            if (distance > 3 + Service.Configuration.MeleeOffset)
                 return false;
 
             return true;

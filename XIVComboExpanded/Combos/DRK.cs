@@ -22,7 +22,9 @@ namespace XIVComboExpandedestPlugin.Combos
             FloodOfShadow = 16469,
             EdgeOfShadow = 16470,
             LivingShadow = 16472,
-            Shadowbringer = 25757;
+            Shadowbringer = 25757,
+            AbyssalDrain = 3641,
+            Unmend = 3624;
 
         public static class Buffs
         {
@@ -43,11 +45,11 @@ namespace XIVComboExpandedestPlugin.Combos
                 Souleater = 26,
                 FloodOfDarkness = 30,
                 EdgeOfDarkness = 40,
+                StalwartSoul = 40,
                 CarveAndSpit = 60,
                 Bloodpiller = 62,
                 Quietus = 64,
                 Delirium = 68,
-                StalwartSoul = 72,
                 Shadow = 74,
                 LivingShadow = 80;
         }
@@ -61,6 +63,12 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == DRK.Souleater)
             {
+                if (IsEnabled(CustomComboPreset.DarkSoulmendFeature))
+                {
+                    if (CanUseAction(DRK.Unmend) && !InMeleeRange())
+                        return DRK.Unmend;
+                }
+
                 if (comboTime > 0)
                 {
                     if (lastComboMove == DRK.HardSlash && level >= DRK.Levels.SyphonStrike)
@@ -128,6 +136,55 @@ namespace XIVComboExpandedestPlugin.Combos
             var gauge = GetJobGauge<DRKGauge>();
             if (IsActionOffCooldown(DRK.LivingShadow) && level >= DRK.Levels.LivingShadow && gauge.Blood >= 50)
                 return DRK.LivingShadow;
+
+            return actionID;
+        }
+    }
+
+    internal class DarkEdgeToFloodFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DarkEdgeToFloodFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRK.EdgeOfShadow || actionID == DRK.EdgeOfDarkness)
+            {
+                if ((lastComboMove == DRK.Unleash || lastComboMove == DRK.StalwartSoul) ||
+                    (!CanUseAction(OriginalHook(DRK.EdgeOfDarkness))))
+                    return OriginalHook(DRK.FloodOfDarkness);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DarkBloodspillerToQuietusFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DarkBloodspillerToQuietusFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRK.Bloodspiller)
+            {
+                if ((lastComboMove == DRK.Unleash || lastComboMove == DRK.StalwartSoul) && level >= DRK.Levels.Quietus)
+                    return DRK.Quietus;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DarkCarvetoDrainFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DarkCarveToDrainFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRK.CarveAndSpit)
+            {
+                if (lastComboMove == DRK.Unleash || lastComboMove == DRK.StalwartSoul || !CanUseAction(DRK.CarveAndSpit))
+                    return DRK.AbyssalDrain;
+            }
 
             return actionID;
         }
