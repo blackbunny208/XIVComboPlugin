@@ -179,6 +179,10 @@ namespace XIVComboExpandedestPlugin
         #region BARD
 
         [OrderedEnum]
+        [CustomComboInfo("Wanderer's Minuet Semi-Fix", "Turns Peloton into Wanderer's Minuet to Pitch Perfect while you have a target, letting you use it regardless of whatever other bards are doing (because SE messed this up so bad, holy crap).", BRD.JobID, BRD.Peloton)]
+        BardWanderersPitchPerfectFeature = 2301,
+
+        [OrderedEnum]
         [CustomComboInfo("Heavy Shot into Straight Shot", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID, BRD.HeavyShot, BRD.BurstShot)]
         BardStraightShotUpgradeFeature = 2302,
 
@@ -364,6 +368,14 @@ namespace XIVComboExpandedestPlugin
         [ConflictingCombos(DragoonNastrondFeature)]
         [CustomComboInfo("Stardiver to Dragonfire Dive", "Stardiver becomes Dragonfire Dive when the latter is off-cooldown (and you have more than 7.5s of LotD left), or outside of Life of the Dragon.", DRG.JobID, DRG.Stardiver)]
         DragoonStarfireDiveFeature = 2208,
+
+        [OrderedEnum]
+        [CustomComboInfo("Lance Charge to Dragon Sight", "Lance Charge becomes Dragon Sight while on cooldown.\nDragon Sight takes priority over Battle Litany.", DRG.JobID, DRG.LanceCharge)]
+        DragoonLanceSightFeature = 2217,
+
+        [OrderedEnum]
+        [CustomComboInfo("Lance Charge to Battle Litany", "Lance Charge becomes Battle Litany while on cooldown.", DRG.JobID, DRG.LanceCharge)]
+        DragoonLancetanyFeature = 2218,
 
         #endregion
         // ====================================================================================

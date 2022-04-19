@@ -64,6 +64,7 @@ namespace XIVComboExpandedestPlugin.Combos
                 Ixochole = 52,
                 Physis2 = 60,
                 Taurochole = 62,
+                Toxikon = 66,
                 Haima = 70,
                 Dosis2 = 72,
                 Rizomata = 74,
@@ -122,7 +123,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (actionID == SGE.Dosis || actionID == SGE.Dosis2 || actionID == SGE.Dosis3)
             {
                 var gauge = GetJobGauge<SGEGauge>();
-                if (this.IsMoving && gauge.Addersting > 0 && !gauge.Eukrasia)
+                if (this.IsMoving && gauge.Addersting > 0 && !gauge.Eukrasia && level >= SGE.Levels.Toxikon)
                     return OriginalHook(SGE.Toxikon);
             }
 
@@ -171,7 +172,7 @@ namespace XIVComboExpandedestPlugin.Combos
 
             var gauge = GetJobGauge<SGEGauge>();
 
-            if ((GetCooldown(OriginalHook(SGE.Phlegma)).CooldownRemaining > 45 || GetTargetDistance() > 6) && gauge.Addersting > 0)
+            if ((GetCooldown(OriginalHook(SGE.Phlegma)).CooldownRemaining > 45 || GetTargetDistance() > 6) && gauge.Addersting > 0 && level >= SGE.Levels.Toxikon)
                 return OriginalHook(SGE.Toxikon);
 
             return actionID;

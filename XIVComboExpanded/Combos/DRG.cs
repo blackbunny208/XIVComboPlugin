@@ -36,7 +36,11 @@ namespace XIVComboExpandedestPlugin.Combos
             DragonfireDive = 96,
             // Dragon
             Stardiver = 16480,
-            WyrmwindThrust = 25773;
+            WyrmwindThrust = 25773,
+            // Buffs
+            LanceCharge = 85,
+            DragonSight = 7398,
+            BattleLitany = 3557;
 
         public static class Buffs
         {
@@ -267,6 +271,36 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             var gauge = GetJobGauge<DRGGauge>();
             return (IsActionOffCooldown(DRG.DragonfireDive) && gauge.LOTDTimer > 7.5) || !gauge.IsLOTDActive || !IsActionOffCooldown(DRG.Stardiver) ? DRG.DragonfireDive : DRG.Stardiver;
+        }
+    }
+
+    internal class DragoonLanceSightFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DragoonLanceSightFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRG.LanceCharge)
+            {
+                if (CanUseAction(DRG.DragonSight) && IsActionOffCooldown(DRG.DragonSight) && !IsActionOffCooldown(DRG.LanceCharge)) return DRG.DragonSight;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DragoonLancetanyFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DragoonLancetanyFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == DRG.LanceCharge)
+            {
+                if (CanUseAction(DRG.BattleLitany) && IsActionOffCooldown(DRG.BattleLitany) && !IsActionOffCooldown(DRG.LanceCharge)) return DRG.BattleLitany;
+            }
+
+            return actionID;
         }
     }
 }

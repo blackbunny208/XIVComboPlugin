@@ -26,6 +26,7 @@ namespace XIVComboExpandedestPlugin.Combos
             ArmysPaeon = 116,
             BattleVoice = 118,
             WanderersMinuet = 3559,
+            Peloton = 7557,
             IronJaws = 3560,
             PitchPerfect = 7404,
             CausticBite = 7406,
@@ -170,6 +171,24 @@ namespace XIVComboExpandedestPlugin.Combos
                     return BRD.CausticBite;
 
                 return BRD.Stormbite;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class BardWanderersPitchPerfectFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardWanderersPitchPerfectFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == BRD.Peloton && CurrentTarget is not null)
+            {
+                var gauge = GetJobGauge<BRDGauge>();
+                if (gauge.Song == Song.WANDERER)
+                    return BRD.PitchPerfect;
+                return BRD.WanderersMinuet;
             }
 
             return actionID;
