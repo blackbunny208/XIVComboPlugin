@@ -51,6 +51,8 @@ namespace XIVComboExpandedestPlugin
 
         #region ASTROLOGIAN
 
+        // latest enum: 3308
+
         [OrderedEnum]
         [CustomComboInfo("Draw on Play", "Play turns into Draw when no card is drawn, as well as the usual Play behavior.", AST.JobID, AST.Play)]
         AstrologianCardsOnDrawFeature = 3301,
@@ -75,6 +77,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Benefic 2 to Benefic Level Sync", "Changes Benefic 2 to Benefic when below level 26 in synced content.", AST.JobID, AST.Benefic2)]
         AstrologianBeneficFeature = 3303,
+
+        [OrderedEnum]
+        [CustomComboInfo("Divination Lockout Feature", "Locks out Divination while it is available and more than 3s remain on its buff, to prevent overwriting raid buffs.", AST.JobID, AST.Divination)]
+        AstrologianDivinationLockoutFeature = 3308,
 
         [OrderedEnum]
         [CustomComboInfo("Astrologian Lucid Dreaming Reminder", "All your non-role action cooldowns (that don't have charges) become Lucid Dreaming if they aren't up and Lucid Dreaming is, and you have less-than-or-equal-to 9000 MP.", AST.JobID, AST.Lightspeed, AST.MinorArcana, AST.CelestialOpposition, AST.CollectiveUnconscious, AST.Divination, AST.EarthlyStar, AST.Exaltation, AST.Macrocosmos, AST.NeutralSect, AST.Synastry, AST.Horoscope)]
@@ -154,7 +160,7 @@ namespace XIVComboExpandedestPlugin
         BlackFireFeature = 2505,
 
         [OrderedEnum]
-        [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 after you have unlocked it, and also becomes Paradox when available.", BLM.JobID, BLM.Blizzard)]
+        [CustomComboInfo("Blizzard 1/3 Feature", "Blizzard 1 becomes Blizzard 3 after you have unlocked it and are not in Umbral Ice 3, and also becomes Paradox when available.", BLM.JobID, BLM.Blizzard)]
         BlackBlizzardFeature = 2506,
 
         [OrderedEnum]
@@ -178,9 +184,7 @@ namespace XIVComboExpandedestPlugin
         // ====================================================================================
         #region BARD
 
-        [OrderedEnum]
-        [CustomComboInfo("Wanderer's Minuet Semi-Fix", "Turns Peloton into Wanderer's Minuet to Pitch Perfect while you have a target, letting you use it regardless of whatever other bards are doing (because SE messed this up so bad, holy crap).", BRD.JobID, BRD.Peloton)]
-        BardWanderersPitchPerfectFeature = 2301,
+        // latest enum: 2313
 
         [OrderedEnum]
         [CustomComboInfo("Heavy Shot into Straight Shot", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID, BRD.HeavyShot, BRD.BurstShot)]
@@ -213,6 +217,18 @@ namespace XIVComboExpandedestPlugin
         BardRadiantFeature = 2307,
 
         [OrderedEnum]
+        [CustomComboInfo("Radiant Strikes Feature", "Replaces Radiant Finale with Raging Strikes if Raging Strikes is off-cooldown.\nThis takes priority over Battle Voice if Radiant Voice is enabled.", BRD.JobID, BRD.RadiantFinale)]
+        BardRadiantStrikesFeature = 2309,
+
+        [OrderedEnum]
+        [CustomComboInfo("Battle Voice Lockout Feature", "Locks out Battle Voice while it is available and more than 3s remain on its buff, to prevent overwriting raid buffs.", BRD.JobID, BRD.BattleVoice)]
+        BardBattleVoiceLockoutFeature = 2312,
+
+        [OrderedEnum]
+        [CustomComboInfo("Radiant Finale Lockout Feature", "Locks out Radiant Finale while it is available and more than 3s remain on its buff, to prevent overwriting raid buffs.", BRD.JobID, BRD.RadiantFinale)]
+        BardRadiantLockoutFeature = 2313,
+
+        [OrderedEnum]
         [CustomComboInfo("Barrage Feature", "Replaces Barrage with Straight Shot (and its upgrades) if you have Straight Shot Ready (unless Shadowbite is ready).", BRD.JobID, BRD.Barrage)]
         BardBarrageFeature = 2308,
 
@@ -236,6 +252,8 @@ namespace XIVComboExpandedestPlugin
         #endregion
         // ====================================================================================
         #region DANCER
+
+        // latest enum: 3813
 
         [OrderedEnum]
         [SecretCustomCombo]
@@ -285,6 +303,10 @@ namespace XIVComboExpandedestPlugin
         DancerDevilmentFeature = 3806,
 
         [OrderedEnum]
+        [CustomComboInfo("Technical Step Lockout Feature", "Locks out Technical Step while it is available and more than 8s remain on its raid buff, to prevent overwriting raid buffs.", DNC.JobID, DNC.TechnicalStep)]
+        DancerTechnicalLockoutFeature = 3813,
+
+        [OrderedEnum]
         [ConflictingCombos(DancerDanceStepCombo)]
         [CustomComboInfo(
             "Dance Step Feature",
@@ -299,6 +321,8 @@ namespace XIVComboExpandedestPlugin
         #endregion
         // ====================================================================================
         #region DRAGOON
+
+        // latest enum: 2219
 
         [OrderedEnum]
         [CustomComboInfo("Full Thrust Combo", "Replace Full Thrust with its combo chain.", DRG.JobID, DRG.FullThrust, DRG.HeavensThrust)]
@@ -376,6 +400,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Lance Charge to Battle Litany", "Lance Charge becomes Battle Litany while on cooldown.", DRG.JobID, DRG.LanceCharge)]
         DragoonLancetanyFeature = 2218,
+
+        [OrderedEnum]
+        [CustomComboInfo("Battle Litany Lockout Feature", "Locks out Battle Litany while it is available and more than 3s remain on its buff, to prevent overwriting raid buffs.", DRG.JobID, DRG.BattleLitany)]
+        DragoonLitanyLockoutFeature = 2219,
 
         #endregion
         // ====================================================================================
@@ -558,9 +586,16 @@ namespace XIVComboExpandedestPlugin
         [CustomComboInfo("Drill / Air Anchor (Hot Shot) Feature", "Replace Drill and Air Anchor (Hot Shot) with one or the other (or Chainsaw) depending on which is on cooldown.", MCH.JobID, MCH.Drill, MCH.HotShot, MCH.AirAnchor)]
         MachinistHotShotDrillChainsawFeature = 3106,
 
+        [OrderedEnum]
+        [SecretCustomCombo]
+        [CustomComboInfo("Chainsaw Cycling Feature", "Replace Chainsaw with Air Anchor and then Drill, in a priority system. Does not replace any other actions, so you can easily watch their cooldowns.", MCH.JobID, MCH.Chainsaw)]
+        MachinistChainsawFeature = 3113,
+
         #endregion
         // ====================================================================================
         #region MONK
+
+        // latest enum: 2028
 
         [OrderedEnum]
         [ConflictingCombos(MonkSTCombo)]
@@ -583,12 +618,18 @@ namespace XIVComboExpandedestPlugin
         MonkPerfectBalanceDemolishFeature = 2026,
 
         [OrderedEnum]
-        [CustomComboInfo("Monk Meditation Reminder", "Your GCDs become Meditate out of combat if you don't have the Fifth Chakra open.", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.FormShift, MNK.SnapPunch, MNK.Demolish, MNK.Bootshine, MNK.DragonKick, MNK.MasterfulBlitz, MNK.Rockbreaker, MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer, MNK.FourPointFury, MNK.SixSidedStar)]
+        [CustomComboInfo("Monk Meditation Reminder", "Your GCDs become Meditate out of combat if you don't have the Fifth Chakra open.", MNK.JobID, MNK.TwinSnakes, MNK.TrueStrike, MNK.FormShift, MNK.SnapPunch, MNK.Demolish, MNK.Bootshine, MNK.DragonKick, MNK.MasterfulBlitz, MNK.Rockbreaker, MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer, MNK.FourPointFury, MNK.SixSidedStar, PLD.TotalEclipse)]
         MonkMeditationReminder = 2013,
 
         [OrderedEnum]
-        [CustomComboInfo("Monk AoE Combo", "Replaces Masterful Blitz (for bug reasons) with the AoE combo chain, or whatever your most damaging move is when Perfect Balance is active.\nFour-Point Fury becomes AoE combo chain in order of forms during Perfect Balance.\nMasterful Blitz replaces the AoE combo when you have 3 Beast Chakra.", MNK.JobID, MNK.MasterfulBlitz, MNK.FourPointFury, MNK.FormShift)]
+        [CustomComboInfo("Monk AoE Combo", "Replaces Masterful Blitz (for bug reasons) with the AoE combo chain, or whatever your most damaging move is when Perfect Balance is active.\nFour-Point Fury becomes AoE combo chain in order of forms during Perfect Balance.\nMasterful Blitz replaces the AoE combo when you have 3 Beast Chakra.", MNK.JobID, MNK.MasterfulBlitz, MNK.FourPointFury, MNK.FormShift, PLD.TotalEclipse)]
         MonkAoECombo = 2001,
+
+        [OrderedEnum]
+        [ParentCombo(MonkAoECombo)]
+        [CustomComboInfo("Monk AoE Combo Experimental No-Blitz Option", "Enabling this option makes it so that Total Eclipse is the basis for your main AoE combo, and Masterful Blitz is untouched.\n" +
+            "To get Total Eclipse onto your Monk hotbar, use a shared hotbar, a macro, or a plugin like ReAction.", MNK.JobID)]
+        MonkAoEComboBlitzOption = 2027,
 
         [OrderedEnum]
         [ParentCombo(MonkAoECombo)]
@@ -648,6 +689,10 @@ namespace XIVComboExpandedestPlugin
         MonkDragonKickAnatmanFeature = 2024,
 
         [OrderedEnum]
+        [CustomComboInfo("Brotherhood Lockout Feature", "Brotherhood is locked out while it is available and more than 3s are left on its buff, to prevent overwriting raid buffs.", MNK.JobID, MNK.Brotherhood)]
+        MonkBrotherhoodLockoutFeature = 2028,
+
+        [OrderedEnum]
         [ConflictingCombos(MonkBootshineCombo, MonkDragonKickCombo)]
         [CustomComboInfo("Monk Complex Combos", "This is a very complex legacy combo for Monk that is still around for people who prefer to use it, but is significantly more complicated (as it is designed to think for you as little as possible).\n" +
             "It is heavily recommended that you use the regular combos instead unless you are already used to this combo.\n" +
@@ -691,7 +736,7 @@ namespace XIVComboExpandedestPlugin
         // ====================================================================================
         #region NINJA
 
-        // last used: 3018
+        // last used: 3023
 
         [OrderedEnum]
         [CustomComboInfo("Aeolian Edge Combo", "Replace Aeolian Edge with its combo chain.", NIN.JobID, NIN.AeolianEdge)]
@@ -743,6 +788,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Hide to Mug", "Replaces Hide with Mug while in combat.", NIN.JobID, NIN.Hide)]
         NinjaHideMugFeature = 3007,
+
+        [OrderedEnum]
+        [CustomComboInfo("Mug Lockout Feature", "Locks out Mug while it is available and more than 3s remain on its debuff, to prevent overwriting raid buffs.", NIN.JobID, NIN.Mug)]
+        NinjaMugLockoutFeature = 3023,
 
         [OrderedEnum]
         [CustomComboInfo("Bhavacakra to Hellfrog Medium", "Replaces Bhavacakra with Hellfrog Medium while you are in the midst of your AoE combo.", NIN.JobID, NIN.Bhavacakra)]
@@ -959,6 +1008,8 @@ namespace XIVComboExpandedestPlugin
         // ====================================================================================
         #region RED MAGE
 
+        // latest enum: 3522
+
         [OrderedEnum]
         [CustomComboInfo("Redoublement Combo", "Replaces Redoublement with its combo chain, following enchantment rules.", RDM.JobID, RDM.Redoublement, RDM.Moulinet)]
         RedMageMeleeCombo = 3502,
@@ -1044,6 +1095,10 @@ namespace XIVComboExpandedestPlugin
         [OrderedEnum]
         [CustomComboInfo("Embolden to Manaification", "Replaces Embolden with Manafication if the former is on cooldown and the latter is not.", RDM.JobID, RDM.Embolden)]
         RedMageEmboldenFeature = 3511,
+
+        [OrderedEnum]
+        [CustomComboInfo("Embolden Lockout Feature", "Locks out Embolden if it is available and more than 3s remain on its buff, to prevent overwriting raid buffs.", RDM.JobID, RDM.Embolden)]
+        RedMageEmboldenLockoutFeature = 3522,
 
         [OrderedEnum]
         [CustomComboInfo("Acceleration to Swiftcast", "Replaces Acceleration with Swiftcast if the former is on cooldown and the latter is not.", RDM.JobID, RDM.Acceleration)]
@@ -1211,8 +1266,14 @@ namespace XIVComboExpandedestPlugin
         // ====================================================================================
         #region SCHOLAR
 
+        // latest enum: 2811
+
         [OrderedEnum]
-        [CustomComboInfo("Seraph Fey Blessing/Consolation", "Change Fey Blessing into Consolation when Seraph is out.", SCH.JobID, SCH.FeyBless)]
+        [CustomComboInfo("Adloquium to Physick Level Sync", "Change Adloquium to Physick when level-synced.", SCH.JobID, SCH.Adloquium)]
+        ScholarAdloPhysickSyncFeature = 2810,
+
+        [OrderedEnum]
+        [CustomComboInfo("Seraph Fey Blessing/Consolation", "Change Fey Blessing into Consolation when Seraph is out.\nNot needed anymore, but some people still have the old XIVCombo muscle memory.", SCH.JobID, SCH.FeyBless)]
         ScholarSeraphConsolationFeature = 2801,
 
         [OrderedEnum]
@@ -1242,6 +1303,10 @@ namespace XIVComboExpandedestPlugin
         ScholarRuinChainFeature = 2807,
 
         [OrderedEnum]
+        [CustomComboInfo("Chain Stratagem Lockout Feature", "Locks out Chain Stratagem while it is available and more than 3s remain on its debuff, to prevent overwriting raid buffs.", SCH.JobID, SCH.ChainStratagem)]
+        ScholarChainLockoutFeature = 2811,
+
+        [OrderedEnum]
         [CustomComboInfo("Ruin 2 Movement Feature", "Ruin/Broil becomes Ruin 2 while you are moving.", SCH.JobID, SCH.Ruin, SCH.Broil, SCH.Broil2, SCH.Broil3, SCH.Broil4)]
         ScholarRuin2MovementFeature = 2809,
 
@@ -1252,6 +1317,8 @@ namespace XIVComboExpandedestPlugin
         #endregion
         // ====================================================================================
         #region SUMMONER
+
+        // latest enum: 2720
 
         [OrderedEnum]
         [CustomComboInfo("Enkindle/Summon Switch", "When Bahamut/Phoenix are summoned, Enkindle Bahamut/Phoenix will replace Summon Bahamut/Phoenix.", SMN.JobID, SMN.SummonBahamut, SMN.SummonPhoenix, SMN.DreadwyrmTrance, SMN.Aethercharge)]
@@ -1327,8 +1394,8 @@ namespace XIVComboExpandedestPlugin
         SummonerCarbyFeature = 2704,
 
         [OrderedEnum]
-        [CustomComboInfo("Searing Demi Feature", "If Searing Light and Aethercharge/Dreadwyrm/Summon Bahamut/Phoenix are both off-cooldown, Searing Light replaces the latter.", SMN.JobID, SMN.Aethercharge, SMN.DreadwyrmTrance, SMN.SummonBahamut, SMN.SummonPhoenix)]
-        SummonerSearingDemiFeature = 2719,
+        [CustomComboInfo("Searing Light Lockout Feature", "Locks out Searing Light if it is available and more than 3s remain on its buff, to prevent overwriting raid buffs.", SMN.JobID, SMN.SearingLight)]
+        SummonerSearingLockoutFeature = 2720,
 
         [OrderedEnum]
         [CustomComboInfo("Summoner Lucid Dreaming Reminder", "All your non-role action cooldowns (that don't have charges) become Lucid Dreaming if they aren't up and Lucid Dreaming is, and you have less-than-or-equal-to 9000 MP.", SMN.JobID, SMN.EnergyDrain, SMN.EnergySyphon, SMN.RadiantAegis, SMN.SearingLight, SMN.SummonBahamut, SMN.DreadwyrmTrance, SMN.EnkindleBahamut, SMN.Aethercharge)]

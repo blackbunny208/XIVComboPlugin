@@ -152,6 +152,12 @@ namespace XIVComboExpandedestPlugin.Combos
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             var currentAction = !CanUseAction(MCH.Chainsaw) && IsEnabled(CustomComboPreset.MachinistReassembleOption) ? MCH.Drill : MCH.Chainsaw;
+
+            if (IsEnabled(CustomComboPreset.MachinistChainsawFeature))
+            {
+                currentAction = MachinistChainsawFeature.ChooseChainsawAction(level);
+            }
+
             var cooldownElapsed = GetCooldown(currentAction).CooldownElapsed;
             // This delay makes sure you don't fatfinger Reassemble twice if you are using it after it gets charges and are smashing the button.
             bool delay = !IsActionOffCooldown(currentAction) && cooldownElapsed < 1 && level >= MCH.Levels.EnhancedReassemble && GetCooldown(MCH.Reassemble).CooldownRemaining < 55 && !IsActionOffCooldown(MCH.Reassemble);
@@ -236,6 +242,53 @@ namespace XIVComboExpandedestPlugin.Combos
                     return CalcBestAction(actionID, MCH.Drill, MCH.HotShot);
 
                 return MCH.HotShot;
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class MachinistChainsawFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.MachinistChainsawFeature;
+
+        public static uint ChooseChainsawAction(byte level)
+        {
+            if (level >= MCH.Levels.Chainsaw)
+            {
+                if (IsActionOffCooldown(MCH.Chainsaw))
+                    return MCH.Chainsaw;
+                if (IsActionOffCooldown(MCH.AirAnchor))
+                    return MCH.AirAnchor;
+                if (IsActionOffCooldown(MCH.Drill))
+                    return MCH.Drill;
+                return MCH.Chainsaw;
+            }
+
+            if (level >= MCH.Levels.AirAnchor)
+            {
+                if (IsActionOffCooldown(MCH.AirAnchor))
+                    return MCH.AirAnchor;
+                if (IsActionOffCooldown(MCH.Drill))
+                    return MCH.Drill;
+                return MCH.AirAnchor;
+            }
+
+            if (CanUseAction(MCH.Drill))
+            {
+                if (IsActionOffCooldown(MCH.HotShot))
+                    return MCH.HotShot;
+                return MCH.Drill;
+            }
+
+            return MCH.HotShot;
+        }
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID == MCH.Chainsaw)
+            {
+                return ChooseChainsawAction(level);
             }
 
             return actionID;

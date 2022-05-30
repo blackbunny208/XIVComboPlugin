@@ -45,7 +45,8 @@ namespace XIVComboExpandedestPlugin.Combos
                 Arrow = 915,
                 Spear = 916,
                 Ewer = 917,
-                Spire = 918;
+                Spire = 918,
+                Divination = 1878;
         }
 
         public static class Debuffs
@@ -109,6 +110,16 @@ namespace XIVComboExpandedestPlugin.Combos
             var gauge = GetJobGauge<ASTGauge>();
 
             return gauge.DrawnCard != CardType.NONE ? OriginalHook(AST.Malefic) : actionID;
+        }
+    }
+
+    internal class AstrologianDivinationLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.AstrologianDivinationLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == AST.Divination && IsActionOffCooldown(AST.Divination) && HasEffectAny(AST.Buffs.Divination) && FindEffectAny(AST.Buffs.Divination)?.RemainingTime > 3 ? SMN.Physick : actionID;
         }
     }
 

@@ -48,6 +48,8 @@ namespace XIVComboExpandedestPlugin.Combos
                 VerstoneReady = 1235,
                 Acceleration = 1238,
                 Dualcast = 1249,
+                EmboldenSelfBuff = 1239,
+                EmboldenRaidBuff = 1297,
                 LostChainspell = 2560;
         }
 
@@ -274,7 +276,18 @@ namespace XIVComboExpandedestPlugin.Combos
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                return (IsActionOffCooldown(RDM.Manafication) && !IsActionOffCooldown(RDM.Embolden) && CanUseAction(RDM.Manafication)) ? RDM.Manafication : actionID;
+                return actionID == RDM.Embolden && ((IsActionOffCooldown(RDM.Manafication) && !IsActionOffCooldown(RDM.Embolden) && CanUseAction(RDM.Manafication))
+                    || (IsEnabled(CustomComboPreset.RedMageEmboldenLockoutFeature) && IsActionOffCooldown(RDM.Embolden) && HasEffectAny(RDM.Buffs.EmboldenRaidBuff) && FindEffectAny(RDM.Buffs.EmboldenRaidBuff)?.RemainingTime > 3)) ? RDM.Manafication : RDM.Embolden;
+            }
+        }
+
+        internal class RedMageEmboldenLockoutFeature : CustomCombo
+        {
+            protected override CustomComboPreset Preset => CustomComboPreset.RedMageEmboldenLockoutFeature;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                return actionID == RDM.Embolden && IsActionOffCooldown(RDM.Embolden) && HasEffectAny(RDM.Buffs.EmboldenRaidBuff) && FindEffectAny(RDM.Buffs.EmboldenRaidBuff)?.RemainingTime > 3 ? SMN.Physick : actionID;
             }
         }
 

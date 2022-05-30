@@ -6,7 +6,21 @@
   "RepoUrl": "https://github.com/blackbunny208/XIVComboPluginExpandedest",
   "IconUrl": "https://raw.githubusercontent.com/blackbunny208/XIVComboPluginExpandedest/master/res/icon.png",
   "ImageUrls": [],
-  "Changelog": "1.3.1.0:
+  "Changelog": "1.3.1.6:
+* Features added to lock out raid buffs if they're already used by other players, except Reaper because that one's really weird with how it uses it in its rotation.
+* Removed Searing Demi Feature as it's sort of unneeded now with 6.1 changes. 
+  
+1.3.1.5:
+* Monk AoE Combo Experimental No-Blitz Option added.
+    
+1.3.1.4:
+* Blizzard 1/3 feature now reverts back to Blizzard 1 at Umbral Ice 3, regardless of Paradox state.
+    
+1.3.1.3:
+* Wanderer's Minuet Semi-Fix removed, as it SHOULD be fixed now in-game with 6.11.
+* Adloquium to Physick Sync added.
+    
+1.3.1.0:
 * Lance Charge to Dragon Sight/Battle Litany added. I cannot confirm how will MOAction/Redirect will work with the former, as I only use UnknownX7's ReAction.
     
 1.3.0.8:

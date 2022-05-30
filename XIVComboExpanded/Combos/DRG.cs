@@ -45,6 +45,7 @@ namespace XIVComboExpandedestPlugin.Combos
         public static class Buffs
         {
             public const ushort
+                BattleLitany = 786,
                 SharperFangAndClaw = 802,
                 EnhancedWheelingThrust = 803,
                 DiveReady = 1243;
@@ -297,10 +298,21 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == DRG.LanceCharge)
             {
-                if (CanUseAction(DRG.BattleLitany) && IsActionOffCooldown(DRG.BattleLitany) && !IsActionOffCooldown(DRG.LanceCharge)) return DRG.BattleLitany;
+                if ((CanUseAction(DRG.BattleLitany) && IsActionOffCooldown(DRG.BattleLitany) && !IsActionOffCooldown(DRG.LanceCharge))
+                    && !(IsEnabled(CustomComboPreset.DragoonLitanyLockoutFeature) && HasEffectAny(DRG.Buffs.BattleLitany) && FindEffectAny(DRG.Buffs.BattleLitany)?.RemainingTime > 3)) return DRG.BattleLitany;
             }
 
             return actionID;
+        }
+    }
+
+    internal class DragoonLitanyLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DragoonLitanyLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == DRG.BattleLitany && IsActionOffCooldown(DRG.BattleLitany) && HasEffectAny(DRG.Buffs.BattleLitany) && FindEffectAny(DRG.Buffs.BattleLitany)?.RemainingTime > 3 ? SMN.Physick : actionID;
         }
     }
 }

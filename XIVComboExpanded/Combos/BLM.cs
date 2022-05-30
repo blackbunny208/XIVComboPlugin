@@ -310,7 +310,7 @@ namespace XIVComboExpandedestPlugin.Combos
             if (actionID == BLM.Blizzard)
             {
                 var gauge = GetJobGauge<BLMGauge>();
-                if (gauge.IsParadoxActive && (gauge.InUmbralIce || (LocalPlayer?.CurrentMp >= 1600 && gauge.InAstralFire)))
+                if ((gauge.IsParadoxActive && (gauge.InUmbralIce || (LocalPlayer?.CurrentMp >= 1600 && gauge.InAstralFire))) || gauge.UmbralIceStacks == 3)
                     return OriginalHook(BLM.Blizzard);
                 if (level >= BLM.Levels.Blizzard3)
                     return BLM.Blizzard3;

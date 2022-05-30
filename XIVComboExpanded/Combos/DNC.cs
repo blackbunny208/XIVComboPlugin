@@ -46,7 +46,8 @@ namespace XIVComboExpandedestPlugin.Combos
                 StandardStep = 1818,
                 TechnicalStep = 1819,
                 ThreefoldFanDance = 1820,
-                FourfoldFanDance = 2699;
+                FourfoldFanDance = 2699,
+                TechnicalFinish = 1822;
         }
 
         public static class Debuffs
@@ -296,6 +297,16 @@ namespace XIVComboExpandedestPlugin.Combos
             }
 
             return actionID;
+        }
+    }
+
+    internal class DancerTechnicalLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.DancerTechnicalLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == DNC.TechnicalStep && OriginalHook(DNC.TechnicalStep) == DNC.TechnicalStep && IsActionOffCooldown(DNC.TechnicalStep) && HasEffectAny(DNC.Buffs.TechnicalFinish) && FindEffectAny(DNC.Buffs.TechnicalFinish)?.RemainingTime > 8 ? SMN.Physick : actionID;
         }
     }
 }

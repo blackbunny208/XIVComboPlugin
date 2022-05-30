@@ -61,7 +61,8 @@ namespace XIVComboExpandedestPlugin.Combos
 
         public static class Debuffs
         {
-            public const ushort Placeholder = 0;
+            public const ushort
+                MugVuln = 638;
         }
 
         public static class Levels
@@ -253,11 +254,25 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == NIN.Hide)
             {
+                if (IsEnabled(CustomComboPreset.NinjaMugLockoutFeature) && IsActionOffCooldown(NIN.Mug) && TargetHasEffectAny(NIN.Debuffs.MugVuln) && FindTargetEffectAny(NIN.Debuffs.MugVuln)?.RemainingTime > 3)
+                    return actionID;
+
                 if (HasCondition(ConditionFlag.InCombat))
                     return NIN.Mug;
             }
 
             return actionID;
+        }
+    }
+
+
+    internal class NinjaMugLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.NinjaMugLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == NIN.Mug && IsActionOffCooldown(NIN.Mug) && TargetHasEffectAny(NIN.Debuffs.MugVuln) && FindTargetEffectAny(NIN.Debuffs.MugVuln)?.RemainingTime > 3 ? SMN.Physick : actionID;
         }
     }
 

@@ -90,7 +90,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == SAM.Shinten && level >= SAM.Levels.Kyuten && (this.FilteredLastComboMove == SAM.Fuga || this.FilteredLastComboMove == SAM.Fuko || this.FilteredLastComboMove == SAM.Oka || this.FilteredLastComboMove == SAM.Mangetsu))
             {
-                if (IsEnabled(CustomComboPreset.SamuraiGurenFeature) && IsActionOffCooldown(SAM.Guren) && CanUseAction(SAM.Guren))
+                if (IsEnabled(CustomComboPreset.SamuraiGurenFeature) && IsActionOffCooldown(SAM.Guren) && CanUseAction(SAM.Guren) && CurrentTarget is not null)
                     return SAM.Guren;
                 if (IsEnabled(CustomComboPreset.SamuraiShoha2Feature) && CanUseAction(SAM.Shoha2))
                     return SAM.Shoha2;
@@ -386,7 +386,7 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             if (actionID == SAM.Kyuten)
             {
-                if (IsActionOffCooldown(SAM.Guren) && CanUseAction(SAM.Guren))
+                if (IsActionOffCooldown(SAM.Guren) && CanUseAction(SAM.Guren) && CurrentTarget is not null)
                     return SAM.Guren;
             }
 

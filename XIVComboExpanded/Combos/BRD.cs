@@ -46,7 +46,9 @@ namespace XIVComboExpandedestPlugin.Combos
             public const ushort
                 StraightShotReady = 122,
                 ShadowbiteReady = 3002,
-                WanderersMinuet = 2216;
+                WanderersMinuet = 2216,
+                RadiantFinale = 2964,
+                BattleVoice = 141;
         }
 
         public static class Debuffs
@@ -171,24 +173,6 @@ namespace XIVComboExpandedestPlugin.Combos
                     return BRD.CausticBite;
 
                 return BRD.Stormbite;
-            }
-
-            return actionID;
-        }
-    }
-
-    internal class BardWanderersPitchPerfectFeature : CustomCombo
-    {
-        protected override CustomComboPreset Preset => CustomComboPreset.BardWanderersPitchPerfectFeature;
-
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID == BRD.Peloton && CurrentTarget is not null)
-            {
-                var gauge = GetJobGauge<BRDGauge>();
-                if (gauge.Song == Song.WANDERER)
-                    return BRD.PitchPerfect;
-                return BRD.WanderersMinuet;
             }
 
             return actionID;
@@ -360,7 +344,8 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return IsActionOffCooldown(BRD.RagingStrikes) || !CanUseAction(BRD.BattleVoice) || (IsEnabled(CustomComboPreset.BardRadiantFeature) && !IsActionOffCooldown(BRD.BattleVoice) && level < BRD.Levels.RadiantFinale) ? BRD.RagingStrikes : actionID;
+            return actionID == BRD.RadiantFinale && (IsActionOffCooldown(BRD.RagingStrikes) || !CanUseAction(BRD.BattleVoice) ||
+                (IsEnabled(CustomComboPreset.BardRadiantFeature) && !IsActionOffCooldown(BRD.BattleVoice) && level < BRD.Levels.RadiantFinale)) ? BRD.RagingStrikes : actionID;
         }
     }
 
@@ -370,7 +355,28 @@ namespace XIVComboExpandedestPlugin.Combos
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return (IsActionOffCooldown(BRD.BattleVoice) || level < BRD.Levels.RadiantFinale) ? BRD.BattleVoice : actionID;
+            return actionID == BRD.RadiantFinale && (level < BRD.Levels.RadiantFinale ||
+                (IsActionOffCooldown(BRD.BattleVoice) && !(IsEnabled(CustomComboPreset.BardBattleVoiceLockoutFeature) && HasEffectAny(BRD.Buffs.BattleVoice) && FindEffectAny(BRD.Buffs.BattleVoice)?.RemainingTime > 3))) ? BRD.BattleVoice : actionID;
+        }
+    }
+
+    internal class BardRadiantLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardRadiantLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == BRD.RadiantFinale && IsActionOffCooldown(BRD.RadiantFinale) && HasEffectAny(BRD.Buffs.RadiantFinale) && FindEffectAny(BRD.Buffs.RadiantFinale)?.RemainingTime > 3 ? SMN.Physick : actionID;
+        }
+    }
+
+    internal class BardBattleVoiceLockoutFeature : CustomCombo
+    {
+        protected override CustomComboPreset Preset => CustomComboPreset.BardBattleVoiceLockoutFeature;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            return actionID == BRD.BattleVoice && IsActionOffCooldown(BRD.BattleVoice) && HasEffectAny(BRD.Buffs.BattleVoice) && FindEffectAny(BRD.Buffs.BattleVoice)?.RemainingTime > 3 ? SMN.Physick : actionID;
         }
     }
 

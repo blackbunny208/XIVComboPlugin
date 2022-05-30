@@ -55,7 +55,8 @@ namespace XIVComboExpandedestPlugin.Combos
         {
             public const ushort
                 Aetherflow = 304,
-                FurtherRuin = 2701;
+                FurtherRuin = 2701,
+                SearingLight = 2703;
         }
 
         public static class Debuffs
@@ -96,19 +97,13 @@ namespace XIVComboExpandedestPlugin.Combos
         }
     }
 
-    internal class SummonerSearingDemiFeature : CustomCombo
+    internal class SummonerSearingLockoutFeature : CustomCombo
     {
-        protected override CustomComboPreset Preset => CustomComboPreset.SummonerSearingDemiFeature;
+        protected override CustomComboPreset Preset => CustomComboPreset.SummonerSearingLockoutFeature;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID == SMN.SummonBahamut || actionID == SMN.SummonPhoenix || actionID == SMN.DreadwyrmTrance || actionID == SMN.Aethercharge)
-            {
-                if (LocalPlayer is not null && IsActionOffCooldown(SMN.SearingLight) && IsActionOffCooldown(OriginalHook(SMN.SummonBahamut)) && level >= SMN.Levels.SearingLight && LocalPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.InCombat))
-                    return SMN.SearingLight;
-            }
-
-            return actionID;
+            return actionID == SMN.SearingLight && IsActionOffCooldown(SMN.SearingLight) && HasEffectAny(SMN.Buffs.SearingLight) && FindEffectAny(SMN.Buffs.SearingLight)?.RemainingTime > 3 ? SCH.Physick : actionID;
         }
     }
 
